@@ -1,0 +1,169 @@
+body{
+    background-image:url('../imagenes/fondo.jpg');
+    background-repeat:100%;
+}
+.card{
+    border:5px none;
+    border-color:rgb(33,122,223)
+}
+.card-deck{
+    padding-top:15px;
+    padding-left:15px;
+    padding-right:20px;
+    height: auto;
+}
+#eventos{
+  width: 100%;
+  height:auto;
+}
+.botonesevento{
+    padding-left:70px;
+    padding-right:70px;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+#registrar{
+    padding:10px 60px 10px 60px;
+    margin-left:25%;
+}
+#contenedor{
+    border: 1px none;
+    background-color: rgba(0,255,0,0.6);
+    padding-bottom:15px;
+    padding-right:15px;
+    padding-left:15px;
+    margin-top:15px;
+}
+#registro{
+    border:10px none;
+    background-color: rgba(44,182,35,0.7);
+    margin-left:20px ;
+    margin-right: 20px;
+    padding: 15px;
+}
+#user{
+    padding-left:5px;
+    padding-right:5px;
+}
+#evento{
+     border:10px none;
+    background-color: rgba(44,182,35,0.7);
+    padding:15px;
+    margin-left:20px ;
+    margin-right: 20px;
+}
+h1{
+text-align:center;
+}
+#eventocompleto{
+    background-color: mediumaquamarine;
+}
+/*CSS PARA COMENTARIOS DE EVENTO*/
+.media .avatar {
+    width: 64px;
+}
+.shadow-textarea textarea.form-control::placeholder {
+    font-weight: 300;
+}
+.shadow-textarea textarea.form-control {
+    padding-left: 0.8rem;
+}
+/*FIN CSS DE COMENTARIOS DE EVENTO*/
+#imagenevento{
+    border: 1px solid black;
+    margin-bottom:30px;
+}
+.navbar{
+        background-color: #55bbfa !important;
+        font-style: italic !important;
+}
+
+.datosbarra{
+    padding-top:3px;
+}
+footer{
+    background-color: #55bbfa !important;
+    padding: 15px;
+}
+.colorfooter{
+     color: #ff7e09 !important;
+    font-weight: bolder !important;
+}
+.iconos{
+    color:black;
+    padding-left:7px ;
+    padding-right: 7px;
+}
+
+#datoscontacto{
+    font-weight: bold;
+}
+.letrasfinas{
+    font-weight: normal;
+    font-size:15px ;
+}
+#logo{
+    padding-left: 45%;
+    padding-bottom: 15%;
+}
+.panelcontrol{
+    background-color: #3ad4de;
+    border: 1px solid black;
+    padding: 10px;
+}
+#espaciogrillaadmin{
+    padding-top: 20px;
+    padding-bottom:20px ;
+}
+#iconosmiseventos_aprobado{
+    color: #0dbf07;
+    padding-left:7px ;
+    padding-right: 7px;
+}
+#iconos_miseventos_desaprobado{
+    color: #ff0000;
+    padding-left:7px ;
+    padding-right: 7px;
+}
+#iconosmiseventos_desaprobado{
+    color: red;
+    padding-left:7px ;
+    padding-right: 7px;
+}
+#botonrechazoadmin{
+    margin-top:10px;
+}
+.botonescomentarios{
+    margin-left: 15px;
+}
+.botonfiltro{
+    background-color: #55bbfa;
+    margin-top:5px;
+}
+.comentariogeneral{
+    margin-left: 180px;
+    font-weight: bold;
+}
+
+.paginacion{
+    margin: 20px 0;
+}
+.paginacion a{
+    text-align: center;
+    display:inline-block;
+    margin-right: 10px;
+    padding: 10px 20px;
+    color:#ffffff;
+    background: #ff7e09;
+    text-decoration: none;
+}
+.paginacion a:hover{
+    background-color:#FF993D; /*Cambia de color el boton de pagina al pasar el mouse por arriba.*/
+}
+
+.paginacion_espacio{
+    min-height: 1px;
+    width: auto;
+}
+
+

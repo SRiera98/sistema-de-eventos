@@ -1,0 +1,65 @@
+{% from "macros.html" import mostrar_campo %}
+{% from "macros.html" import mostrar_campo_submit %}
+{% extends "main.html"%}
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+{% endblock %}
+{% block iconos %}
+    <link href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
+{% endblock %}
+{% block contenido %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="evento">
+                {% if (destino=="establecer_evento") %}
+                    <h1>Crear Evento</h1>
+                <form method="POST" action="{{ url_for(destino)}}" enctype="multipart/form-data">
+                {% endif %}
+                {% if (destino=="actualizar_evento") %}
+                    <h1>Actualizar Evento</h1>
+                <form method="POST" action="{{ url_for(destino,id=evento["eventoId"]) }}" enctype="multipart/form-data">
+                {% endif %}
+
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    {{mostrar_campo(agregarevento.titulo,class='form-control')}}
+                    {{mostrar_campo(agregarevento.fecha,class='form-control')}}
+                    {{mostrar_campo(agregarevento.hora,class='form-control')}}
+                    {{mostrar_campo(agregarevento.opciones,class='form-control')}}
+                    {{mostrar_campo(agregarevento.descripcion,class='form-control')}}
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            {% if (destino=="establecer_evento") %}
+                                {{mostrar_campo(agregarevento.imagen, class='form-control')}}
+                            {% endif %}
+                            {% if(destino=="actualizar_evento") %}
+                                <img style="width:150px;margin-left:20px;margin-bottom:-75px;" src="{{url_for('static', filename='imagenes/'+agregarevento.imagen.data)}}" >
+                             {% endif %}
+                        </div>
+                        <div class="form-group col-md-4">
+                        </div>
+                         <div class="form-group col-md-4">
+                         </div>
+
+
+                    </div>
+
+
+
+                    <div class="form-group row"style="margin-top: 70px;">
+                        <div class="col-md-4">
+                                                {{mostrar_campo_submit(agregarevento.envio_evento,class='btn btn-primary botonesevento')}}
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('index')}}" name="cancel" id="cancelar"
+                               class="btn btn-danger botonesevento">Cancelar</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

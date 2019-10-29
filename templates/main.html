@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cabecera</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    {% block iconos %}
+    {% endblock %}
+    {% block estilos %}
+    {% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a href="{{url_for('index')}}" class="navbar-left">
+            <img src="{{url_for('static', filename='imagenes/eventflarelogo.png')}}">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated and not current_user.admin %}
+                    <li class="nav-item  colorfooter">
+                        <a class="nav-link colorfooter" href="#">Hola {{ current_user.nombre }} {{ current_user.apellido }}<img src="{{url_for('static', filename='imagenes/userimage.png')}}"></a>
+                    </li>
+                    <li class="nav-item datosbarra  colorfooter">
+                        <a class="nav-link  colorfooter" href="{{url_for('eventos_usuario')}}">Mis Eventos</a>
+                    </li>
+                    <li class="nav-item datosbarra  colorfooter">
+                        <a class="nav-link  colorfooter" href="{{ url_for('establecer_evento')}}">Crear Evento</a>
+                    </li>
+                    <li class="nav-item datosbarra  colorfooter">
+                        <a class="nav-link  colorfooter" href="{{ url_for('logout')}}">Cerrar Sesión</a>
+                    </li>
+
+                {% elif not current_user.is_authenticated %}
+                    <li class="nav-item colorfooter">
+                    <!-- Boton trigger modal -->
+                    <button type="button" class="botonfiltro datosbarra colorfooter" data-toggle="modal" data-target="#modal">
+                        Buscar Evento
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal" tabindex="-1" role="dialog"
+                         aria-labelledby="etiquetamodal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="etiquetamodal">Filtrar Eventos</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form class="form-inline">
+                                                    <div class="form-group">
+                                                        <label for="fechainicio">Desde</label>
+                                                        <input type="date" class="form-control" id="fechainicio"
+                                                               placeholder="Desde">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="fechafinal">Hasta</label>
+                                                        <input type="date" class="form-control" id="fechafinal"
+                                                               placeholder="Hasta">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="categoria">Categoria</label>
+                                                        <select name="desplegable" id="categoria" class="form-control">
+                                                            <option value="">--Elige una Categoria --</option>
+                                                            <option value="opcion1">Entretenimiento</option>
+                                                            <option value="opcion2">Charla instructiva</option>
+                                                            <option value="opcion3">Musica</option>
+                                                            <option value="opcion4">Curso</option>
+                                                        </select>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <a href="{{ url_for('index')}}" type="button" class="btn btn-primary">Buscar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item datosbarra  colorfooter">
+                    <a class="nav-link  colorfooter" href="{{ url_for('index')}}">Ver Eventos</a>
+                </li>
+                {% else %}
+                    <li class="nav-item  colorfooter">
+                        <a class="nav-link colorfooter" href="#">Hola Admin<img src="{{url_for('static', filename='imagenes/userimage.png')}}"></a>
+                    </li>
+                    <li class="nav-item datosbarra  colorfooter">
+                        <a class="nav-link  colorfooter" href="{{url_for('indexadmin')}}">Panel de Eventos</a>
+                    </li>
+                    {# <li class="nav-item datosbarra  colorfooter">
+                        <a class="nav-link  colorfooter" href="#">Comentarios</a>
+                    </li> #}
+                    <li class="nav-item datosbarra  colorfooter">
+                        <a class="nav-link  colorfooter" href="{{ url_for('logout')}}">Cerrar Sesión</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+ <div class="container">
+   <div class="row">
+     <div class="col-md-12">
+       <!--Obtener mensajes mensajes-->
+      {% with messages = get_flashed_messages() %}
+       <!--Si existen mensajes-->
+        {% if messages %}
+         <!--Recorrer mensajes-->
+          {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <!--Mostrar mensaje-->
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endfor %}
+         {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</div>
+
+
+{% block contenido %}
+{{super()}} <!--Super hereda este contenido y el del padre-->
+{% endblock %}
+<footer class="text-center footer-style">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 footer-col">
+                <h4 class="colorfooter">Datos Legales</h4>
+                <p>&copy; 2019-2020 Todos los Derechos Reservados
+                </p>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4 class="colorfooter">Redes Sociales</h4>
+                <ul class="list-inline">
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com" class="btn-social btn-outline"><i class="fa fa-2x fa fa-facebook iconos"></i></a>
+                        <a target="_blank" href="https://plus.google.com/" class="btn-social btn-outline"><i class="fa fa-2x fa fa-google-plus  iconos"></i></a>
+                        <a target="_blank" href="https://www.twitter.com" class="btn-social btn-outline"><i class="fa fa-2x fa fa-twitter  iconos"></i></a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4 class="colorfooter">Datos de Contacto</h4>
+                <p id="datoscontacto">Correo pagina: eventflare@eventos.com</p>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

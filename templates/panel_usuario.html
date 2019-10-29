@@ -1,0 +1,14 @@
+{% from "macros.html" import evento_user %}
+{% extends "main.html"%}
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+{% endblock %}
+{% block contenido %}
+    
+<h1>Mis Eventos</h1>
+
+{% for evento in listar_eventos %}
+{{ evento_user(evento) }}
+{% endfor %}
+
+{% endblock %}
