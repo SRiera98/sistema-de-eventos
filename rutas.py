@@ -53,16 +53,7 @@ def unauthorized_callback():
     flash('Debe iniciar sesión para continuar.','warning')
     #Redireccionar a la página que contiene el formulario de login
     return redirect(url_for('login'))
-"""
-#Se ejecuta cada vez que se realiza una request
-@app.before_request #una funcion que se va a ejecutar antes de entrar a cualquier funcion de una ruta.
-def before_request():
-    #Si el usuario no esta logueado
-    usuario = current_user
-    if usuario.is_authenticated==False and request.endpoint!="login" and request.endpoint!="registro_usuario":
-        ingreso = formularios.FormularioLogin() #instancio el formulario de login debido a que se lo necesito pasar al template
-        return render_template('iniciar_sesion.html',ingresar=ingreso)
-"""
+
 
 
 @app.route('/',methods=['POST','GET'])
@@ -143,8 +134,9 @@ def establecer_evento():
         file.save(os.path.join('static/imagenes/', filename))  # Guardar imagen en sistema
         flash('¡Evento creado correctamente!')
         mostrar_datos_nuevoevento(nuevoevento)
-        #crearEvento(nombre,fecha,hora,descripcion,imagen,tipo,usuarioId):
+
         crearEvento(nuevoevento.titulo.data,nuevoevento.fecha.data,nuevoevento.hora.data,nuevoevento.descripcion.data,filename,nuevoevento.opciones.data,current_user.usuarioId)
+
         return redirect(url_for('establecer_evento'))
     return render_template('establecer_evento.html',agregarevento=nuevoevento,destino="establecer_evento")
 

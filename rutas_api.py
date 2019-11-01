@@ -63,7 +63,6 @@ def apiGetEventoById(id):
 #Listar Comentarios por Evento
 #curl -H "Accept:application/json" http://localhost:8000/api/evento/comentarios/todos/108
 @app.route('/api/evento/comentarios/todos/<id>',methods=['GET'])
-@csrf.exempt
 def apiListarComentariosByEvento(id):
     comentarios=db.session.query(Comentario).filter(Comentario.eventoId==Evento.eventoId, Comentario.eventoId==id,Evento.eventoId==id)
     return jsonify({'Comentarios': [comentario.a_json() for comentario in comentarios]})
