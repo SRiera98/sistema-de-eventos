@@ -1,3 +1,5 @@
+from sqlalchemy.exc import SQLAlchemyError
+
 from modelos import *
 from flask import request
 from flask import Flask
@@ -17,6 +19,7 @@ import datetime #importar funciones de fecha
 from funciones_mail import *
 from funciones_basedatos import *
 from flask_login import login_required, login_user, logout_user, current_user, LoginManager
+from errores import *
 load_dotenv()
 def mysql_query(query):
     return query.statement.compile(compile_kwargs={"literal_binds": True})
@@ -135,8 +138,9 @@ def establecer_evento():
         flash('¡Evento creado correctamente!')
         mostrar_datos_nuevoevento(nuevoevento)
 
-        crearEvento(nuevoevento.titulo.data,nuevoevento.fecha.data,nuevoevento.hora.data,nuevoevento.descripcion.data,filename,nuevoevento.opciones.data,current_user.usuarioId)
-
+        evento=crearEvento(nuevoevento.titulo.data,nuevoevento.fecha.data,nuevoevento.hora.data,nuevoevento.descripcion.data,filename,nuevoevento.opciones.data,current_user.usuarioId)
+        if evento==False:
+            return mostrarTemplateError()
         return redirect(url_for('establecer_evento'))
     return render_template('establecer_evento.html',agregarevento=nuevoevento,destino="establecer_evento")
 
@@ -164,7 +168,9 @@ def actualizar_evento(id):
         evento.imagen=nuevoevento.imagen.data
         evento.aprobado=False
 
-        actualizarEvento(evento)
+        actualizacion=actualizarEvento(evento)
+        if actualizacion==False:
+            return mostrarTemplateError()
     else:
 
         nuevoevento.titulo.data = evento.nombre
@@ -204,9 +210,13 @@ def eventogeneral(id):
 def agregar_comentario(id):
     nuevocomentario = formularios.FormularioComentario()
     if nuevocomentario.validate_on_submit():
-        flash('¡Has comentado el evento con exito!')
         mostrar_datos_comentario(nuevocomentario)
-        crearComentario(contenido=nuevocomentario.comentario.data,usuarioId=current_user.usuarioId,eventoId=id)
+        comentario=crearComentario(contenido=nuevocomentario.comentario.data,usuarioId=current_user.usuarioId,eventoId=id)
+
+        if comentario==False:
+            return mostrarTemplateError()
+
+        flash('¡Has comentado el evento con exito!')
         return redirect(url_for('eventogeneral',id=id))
     return render_template('evento_general.html',nuevocomentario=nuevocomentario)
 
@@ -234,8 +244,9 @@ def aprobar_evento(id):
         return redirect(url_for('index'))
     evento=db.session.query(Evento).get(id)
     evento.aprobado=True
-    actualizarEvento(evento)
-
+    actualizacion = actualizarEvento(evento)
+    if actualizacion == False:
+        return mostrarTemplateError()
     #Estableciendo todo para enviar email
     email=evento.usuario.email
     # Crear hilo para enviar mail asincronico
@@ -251,11 +262,15 @@ def registro_usuario():
     registro=formularios.FormularioRegistro()
     if registro.validate_on_submit(): #Si el formulario ha sido enviado y es validado correctamente
         username=registro.nombre.data
-        flash('¡{} has sido registrado exitosamente!'.format(username)) #Mostrar mensaje
+
         mostrar_datos(registro)  #Imprimir datos por consola
         # Crear un usuario
         usuario=crearUsuario(registro.nombre.data, registro.apellido.data, registro.email.data,registro.contrasena.data,False)
 
+        if usuario==False:
+            return mostrarTemplateError()
+
+        flash('¡{} has sido registrado exitosamente!'.format(username))  # Mostrar mensaje
         #Establezco los parametros para enviar el email que confirma el registro
         # Crear hilo para enviar mail asincronico
         # Destino, Asunto, Template
@@ -278,8 +293,30 @@ def eliminarEventoAdmin(id):
     #Eliminar de la db
     db.session.delete(evento)
     #Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion EliminarEventoAdmin in rutas.py")
+        return mostrarTemplateError()
     return redirect(url_for('indexadmin', evento=evento))
+@app.route('/probar_error/')
+def probarerror():
+    # Instancio usuario a asociar con evento.
+
+    # Crear un evento
+    evento = Evento(descripcion="este es un evento", imagen="imagen1.png",tipo="Curso", aprobado=False)
+    # Agregar a db
+    db.session.add(evento)
+    # Hacer commit de los cambios
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        print("\n\n\n"+str(e))
+        logger(str(e._message()),"Funcion probarerror in rutas.py")
+        return mostrarTemplateError()
+
 
 
 @app.route('/usuario/evento/eliminar/<id>')
@@ -290,7 +327,12 @@ def eliminarEventoUser(id):
     #Eliminar de la db
     db.session.delete(evento)
     #Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion eliminarEventoUser in rutas.py")
+        return mostrarTemplateError()
     return redirect(url_for('eventos_usuario', evento=evento))
 
 
@@ -310,7 +352,12 @@ def eliminarComentario(id):
     #Eliminar de la db
     db.session.delete(comentario)
     #Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion eliminarComentario in rutas.py")
+        return mostrarTemplateError()
     return redirect(url_for('evento_en_detalle_admin',id=eventoid))
 
 @app.route('/comentario/eliminar/todos/<id>')
@@ -327,7 +374,12 @@ def eliminarTodosLosComentarios(id):
     for datos in range(0,len(comentarios)):
         db.session.delete(comentarios[datos])
     # Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion eliminarTodosLosComentarios in rutas.py")
+        return mostrarTemplateError()
     return redirect(url_for('indexadmin'))
 
 #----------------Final de algunas funciones de Base de Datos-------

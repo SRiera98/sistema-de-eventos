@@ -42,4 +42,5 @@ csrf = CSRFProtect(app) #Iniciar protección CSRF
 if __name__ == '__main__':
     from rutas import *
     from rutas_api import *
+    from errores import  *
     app.run(port = 8000,debug=True)

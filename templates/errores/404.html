@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" class="estilohtml_etiqueta">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+
+    <title>404</title>
+</head>
+<body class="estilohtml_body">
+<div class="terminal">
+    <h1>Error <span class="errorcode">404</span></h1>
+    <p class="output">La pagina que estas buscando puede que haya sido eliminada, haya cambiado su nombre o este temporalmente
+        inhabilitada.</p>
+    <p class="output">Intenta ir a la <a class="estilo_links" href="{{url_for('index')}}">pagina principal</a>.</p>
+
+</div>
+</body>
+</html>

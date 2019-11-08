@@ -2,6 +2,8 @@ from run import db,app
 from flask import render_template,redirect, url_for
 from flask import Flask
 from modelos import *
+from sqlalchemy.exc import SQLAlchemyError
+from errores import logger, mostrarTemplateError
 
 
 #----------------Comienzo de funciones de Base de Datos-------
@@ -14,12 +16,21 @@ def listarUsuarios():
 @app.route('/usuario/crear/<nombre>/<apellido>/<email>/<password>/<admin>')
 def crearUsuario(nombre,apellido,email,password,admin=False):
     # Crear un usuario
-    usuario = Usuario(nombre=nombre, apellido=apellido, email=email,passwrd=password, admin=admin)
-
+    usuario = Usuario(nombre=nombre,apellido=apellido, email=email,passwrd=password, admin=admin)
+    print(f"EL nombre es{usuario.nombre}")
+    print(usuario)
     # Agregar a db
     db.session.add(usuario)
     # Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+        print("Commiteando.......\n\n\n")
+    except SQLAlchemyError as e:
+        print("Entrando a except.")
+        db.session.rollback()
+        logger(str(e._message()),"Funcion crearUsuario in funciones_basedatos.py")
+        return False
+    print("RETORNANDO USUARIO......")
     return usuario
     #Envía la persona a la vista
     #return render_template('index',usuario=usuario)
@@ -32,7 +43,12 @@ def eliminarUsuario(id):
     #Eliminar de la db
     db.session.delete(usuario)
     #Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion EliminarUsuario in funciones_basedatos.py")
+        return mostrarTemplateError()
     return redirect(url_for('listarUsuarios'))
 
 @app.route('/usuario/getById/<id>')
@@ -60,14 +76,24 @@ def crearEvento(nombre,fecha,hora,descripcion,imagen,tipo,usuarioId,aprobado=Fal
     #Agregar a db
     db.session.add(evento)
     #Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion crearEvento in funciones_basedatos.py")
+        return False
     #Envía la persona a la vista
 #    return render_template('evento.html',evento=evento)
 
 @app.route('/evento/actualizar/<evento>')
 def actualizarEvento(evento):
     db.session.add(evento)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion actualizarEvento in funciones_basedatos.py")
+        return False
 
 
 
@@ -98,7 +124,12 @@ def crearComentario(contenido,usuarioId,eventoId):
     #Agregar a db
     db.session.add(comentario)
     #Hacer commit de los cambios
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion crearComentario in funciones_basedatos.py")
+        return False
     #Envía el comentario a la vista
     #return render_template('comentario.html',comentario=comentario)
 

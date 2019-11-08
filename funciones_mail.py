@@ -4,7 +4,7 @@ from flask_mail import Mail, Message #Importar para enviar Mail
 from threading import Thread #Importar hilos
 from flask import render_template,redirect, url_for
 from flask import Flask
-
+from errores import logger
 #-------------------Comienzo Funciones Email------------------------------------------------------------------------
 
 #Función para mandar un mail de manera asincrónica
@@ -19,13 +19,19 @@ def enviarMailAsincronico(app, msg):
 
         #Mostrar errores por consola
         except smtplib.SMTPAuthenticationError as e:
-            print("Error de autenticación: "+str(e))
+            print("Error de autenticación, MAIL_USER o MAIL_PASSWORD incorrectos \n"+str(e))
+            logger(str(e),"enviarMailAsincronico in funciones_mail.py")
         except smtplib.SMTPServerDisconnected as e:
-            print("Servidor desconectado: "+str(e))
+            print("Servidor desconectado: \n\n\n"+str(e))
+            logger(str(e), "enviarMailAsincronico in funciones_mail.py")
         except smtplib.SMTPSenderRefused as e:
             print("Se requiere autenticación: "+str(e))
-        except smtplib.SMTPException as e:
+            logger(str(e), "enviarMailAsincronico in funciones_mail.py")
+        except smtplib.SMTPException as e: #Error generico
             print("Error: "+str(e))
+            logger(str(e), "enviarMailAsincronico in funciones_mail.py")
+        except OSError as e:
+            logger(str(e), "enviarMailAsincronico in funciones_mail.py")
 
 #Función que genera el hilo que enviará el mail
 def enviarMailThread(to, subject, template, **kwargs):
