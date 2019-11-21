@@ -1,7 +1,14 @@
+from sqlalchemy.exc import SQLAlchemyError
+
+from errores import logger
 from modelos import *
 from flask import jsonify,request
 from run import db,app,csrf
 from funciones_mail import enviarMailThread
+
+
+#ANALIZAR COMO ACCEDER AL TRY EXCEPT DE LOS ERRORES DE BD, DADO QUE SE QUEDA EN EL ERROR 404 DEL GET_OR_404(ID)
+
 
 #Listar Eventos Pendientes
 #curl -H "Accept:application/json" http://localhost:8000/api/evento/listar/
@@ -25,7 +32,12 @@ def apiActualizarEventoPendiente(id):
     evento.tipo=request.json.get('tipo',evento.tipo)
     evento.aprobado=False
     db.session.add(evento)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion apiActualizarEventoPendiente in rutas_api.py")
+    print("Evento fue actualizado con exito!")
     return jsonify(evento.a_json()), 201
 
 #Eliminar Evento Pendiente
@@ -33,10 +45,14 @@ def apiActualizarEventoPendiente(id):
 @app.route('/api/evento_pendiente/eliminar/<id>',methods=['DELETE'])
 @csrf.exempt
 def apiEliminarEventoPendiente(id):
-    evento=db.session.query(Evento).get(id)
+    evento=db.session.query(Evento).get_or_404(id)
     db.session.delete(evento)
-    db.session.commit()
-    print("Evento fue eliminado!")
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion apiEliminarEventoPendiente in rutas_api.py")
+    print("Evento fue eliminado con exito!")
     return "",204
 
 #Aprobar Evento
@@ -44,11 +60,16 @@ def apiEliminarEventoPendiente(id):
 @app.route('/api/evento_pendiente/aprobar/<id>',methods=['POST'])
 @csrf.exempt
 def apiAprobarEventoPendiente(id):
-    evento=db.session.query(Evento).get(id)
+    evento=db.session.query(Evento).get_or_404(id)
     evento.aprobado=True
     enviarMailThread(evento.usuario.email, '¡Tu Evento fue Aprobado!', 'mail/eventoaprobado', evento=evento) #Enviamos mail de aprobacion.
     db.session.add(evento)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion apiAprobarEventoPendiente in rutas_api.py")
+    print("Evento fue aprobado con exito!")
     return jsonify({'evento': [evento.a_json()]})
 
 
@@ -56,7 +77,7 @@ def apiAprobarEventoPendiente(id):
 #curl -i -H "Content-Type:apsplication/json" -H "Accept: application/json" http://localhost:8000/api/evento/2
 @app.route('/api/evento/<id>', methods=['GET'])
 def apiGetEventoById(id):
-    evento =  db.session.query(Evento).get(id)
+    evento =  db.session.query(Evento).get_or_404(id)
     #Convertir el evento creada en JSON
     return jsonify(evento.a_json())
 
@@ -72,9 +93,13 @@ def apiListarComentariosByEvento(id):
 @app.route('/api/comentario/eliminar/<id>',methods=['DELETE'])
 @csrf.exempt
 def apiEliminarComentario(id):
-    comentario=db.session.query(Comentario).get(id)
+    comentario=db.session.query(Comentario).get_or_404(id)
     db.session.delete(comentario)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logger(str(e._message()),"Funcion apiEliminarComentario in rutas_api.py")
     print("Comentario Eliminado correctamente!")
     return "", 204
 
@@ -82,6 +107,6 @@ def apiEliminarComentario(id):
 #curl -i -H "Content-Type:apsplication/json" -H "Accept: application/json" http://localhost:8000/api/comentario/2
 @app.route('/api/comentario/<id>', methods=['GET'])
 def apiGetComentarioById(id):
-    comentario =  db.session.query(Comentario).get(id)
+    comentario =  db.session.query(Comentario).get_or_404(id)
     #Convertir el comentario creada en JSON
     return jsonify(comentario.a_json())

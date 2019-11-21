@@ -1,55 +1,42 @@
 {% from "macros.html" import comentariosadmin %}
-{% extends "main.html"%}
+{% extends "main.html" %}
 {% block estilos %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
 {% endblock %}
 {% block iconos %}
-<link href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
 {% endblock %}
 {% block contenido %}
-<div class="container">
-    <div class="row">
-        <div>
-            <h1>{{evento["nombre"]}}</h1>
-            <div class="col-md-8">
-                <div id="imagenevento">
-                    <img src="{{url_for('static', filename='imagenes/'+evento["imagen"])}}" class="card-img-top"
-                         id="eventototal" alt="...">
+    <div class="container">
+        <div class="row">
+            <div>
+                <h1>{{ evento["nombre"] }}</h1>
+                <div class="col-md-8">
+                    <div id="imagenevento">
+                        <img src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}" class="card-img-top"
+                             id="eventototal" alt="...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <p class="card-text"><span class="oi oi-calendar" title="calendar"></span>{{ evento["fecha"] }}</p>
+                    <p class="card-text"><span class="oi oi-clock" title="clock"></span>{{ evento["hora"] }}</p>
+                    <p class="card-text"><span class="oi oi-map" title="map"></span>{{ evento["descripcion"] }}</p>
+                    <p class="card-text"><span class="oi oi-caret-right" title="caret-right"></span>{{ evento["tipo"] }}
+                    </p>
+                    {% if(evento["aprobado"]==0) %}
+                        <a href="{{ url_for('aprobar_evento',id=evento["eventoId"]) }}" type="button"
+                           class="btn btn-success">Aprobar Evento</a>
+                    {% endif %}
                 </div>
             </div>
-            <div class="col-md-4">
-                <p class="card-text"><span class="oi oi-calendar" title="calendar"></span>{{evento["fecha"]}}</p>
-                <p class="card-text"><span class="oi oi-clock" title="clock"></span>{{evento["hora"]}}</p>
-                <p class="card-text"><span class="oi oi-map" title="map"></span>{{evento["descripcion"]}}</p>
-                <p class="card-text"><span class="oi oi-caret-right" title="caret-right"></span>{{evento["tipo"]}}</p>
-                {% if(evento["aprobado"]==0) %}
-                <a href="{{ url_for('aprobar_evento',id=evento["eventoId"])}}" type="button" class="btn btn-success">Aprobar Evento</a>
-                                    <form id="botonrechazoadmin">
-                    {#<div class="form-group row">
-                        <div class="col-md-4">
-                            <a href="{{ url_for('indexadmin')}}" type="submit" class="btn btn-danger">Desaprobar
-                                Evento</a>
-                        </div>
-                        <div class="col-md-8">
+            <a href="{{ url_for('eliminarTodosLosComentarios',id=evento["eventoId"]) }}" type="button"
+               class="btn btn-warning">Eliminar Todos los Comentarios</a>
 
-                        </div>
-                        <div class="col-md-12">
-                            <input type="text" name="campotexto" id="texto" class="form-control"
-                                   placeholder="¿Por que se desaprueba?">
-                        </div>
-
-                    </div>#}
-                </form>
-                {% endif %}
-            </div>
         </div>
-        <a href="{{ url_for('eliminarTodosLosComentarios',id=evento["eventoId"])}}" type="button" class="btn btn-warning">Eliminar Todos los Comentarios</a>
+        {% for comentario in evento.comentarios %}
+            {{ comentariosadmin(comentario) }}
+        {% endfor %}
+
 
     </div>
-    {% for comentario in evento.comentarios %}
-    {{ comentariosadmin(comentario) }}
-    {% endfor %}
-
-
-</div>
 {% endblock %}

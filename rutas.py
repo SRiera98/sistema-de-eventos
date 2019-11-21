@@ -10,43 +10,16 @@ from flask import redirect, url_for #importar para permitir redireccionar y gene
 from flask import flash #importar para mostrar mensajes flash
 import os.path
 from werkzeug.utils import secure_filename
-import datetime
 from datetime import datetime
 from flask import render_template #Permite importar templates
-from flask import redirect, url_for #importar para permitir redireccionar y generar url
 from run import db,app
 import datetime #importar funciones de fecha
 from funciones_mail import *
 from funciones_basedatos import *
 from flask_login import login_required, login_user, logout_user, current_user, LoginManager
 from errores import *
+from funciones import *
 load_dotenv()
-def mysql_query(query):
-    return query.statement.compile(compile_kwargs={"literal_binds": True})
-
-def mostrar_datos(registro):
-    print(registro.nombre.data)
-    print(registro.apellido.data)
-    print(registro.email.data)
-    print(registro.contrasena.data)
-def mostrar_datos_login(ingreso):
-    print(ingreso.email.data)
-    print(ingreso.contrasena.data)
-def mostrar_datos_nuevoevento(nuevoevento):
-    print(nuevoevento.titulo.data)
-    print(nuevoevento.fecha.data)
-    print(nuevoevento.hora.data)
-    print(nuevoevento.opciones.data)
-    print(nuevoevento.descripcion.data)
-    print(nuevoevento.imagen.data)
-def mostrar_datos_comentario(nuevocomentario):
-    print(nuevocomentario.comentario.data)
-
-def mostrar_datos_filtrado(formulario):
-    print("Fechadesde"+str(formulario.desde_fecha.data))
-    print("Fechahasta"+str(formulario.hasta_fecha.data))
-    print("Categoria"+str(formulario.categoria.data))
-
 
 
 app.secret_key = os.getenv('SECRET_KEY') #clave secreta
@@ -171,6 +144,7 @@ def actualizar_evento(id):
         actualizacion=actualizarEvento(evento)
         if actualizacion==False:
             return mostrarTemplateError()
+        return redirect(url_for('eventos_usuario'))
     else:
 
         nuevoevento.titulo.data = evento.nombre
@@ -181,7 +155,7 @@ def actualizar_evento(id):
         nuevoevento.imagen.data = evento.imagen
 
         formularios.FormularioCrearEvento.opcional(nuevoevento.imagen)
-    return render_template('establecer_evento.html',agregarevento=nuevoevento,destino="actualizar_evento",evento=evento)
+        return render_template('establecer_evento.html',agregarevento=nuevoevento,destino="actualizar_evento",evento=evento)
 
 
 
@@ -341,9 +315,7 @@ def eliminarEventoUser(id):
 
 @app.route('/comentario/eliminar/<id>')
 def eliminarComentario(id):
-    # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
-    if current_user.is_admin() == False:
-        return redirect(url_for('index'))
+
 
     # EJ: comentario/eliminar/1
     #Obtener comentario por id
@@ -358,7 +330,10 @@ def eliminarComentario(id):
         db.session.rollback()
         logger(str(e._message()),"Funcion eliminarComentario in rutas.py")
         return mostrarTemplateError()
-    return redirect(url_for('evento_en_detalle_admin',id=eventoid))
+    if current_user.admin:
+        return redirect(url_for('evento_en_detalle_admin',id=eventoid))
+    else:
+        return redirect(url_for('eventogeneral',id=eventoid))
 
 @app.route('/comentario/eliminar/todos/<id>')
 def eliminarTodosLosComentarios(id):
@@ -366,7 +341,7 @@ def eliminarTodosLosComentarios(id):
     if current_user.is_admin() == False:
         return redirect(url_for('index'))
 
-    #Instanciamos el evento desado.
+    #Instanciamos el evento deseado.
     evento=db.session.query(Evento).get(id)
     #Traemos todos los comentarios de dicho evento, debido a que para ello deberan coincidir los eventoId de evento y comentarios
     comentarios=db.session.query(Comentario).filter(Comentario.eventoId==evento.eventoId).all()

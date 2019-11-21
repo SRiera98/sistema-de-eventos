@@ -1,198 +1,180 @@
-{% macro mostrar_evento(evento)%}
-<div class="col-md-4">
-    <div class="container" id="contenedor">
-        <!--Pricipio card deck-->
-        <div class="card-deck" id="eventos">
-            <div class="card">
-                <img src="{{url_for('static', filename='imagenes/'+evento["imagen"])}}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{evento["nombre"]}}</h5>
-                    <p class="card-text"><span class="oi oi-calendar" title="calendar"></span>{{evento["fecha"]}}</p>
-                    <p class="card-text"><span class="oi oi-clock" title="clock"></span>{{evento["hora"]}}</p>
-                    <p class="card-text"><span class="oi oi-browser" title="map"></span>{{evento["tipo"]}}</p>
-                    <p class="card-text">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </p>
-                    <a href="{{url_for('eventogeneral',id=evento["eventoId"])}}" type="button" class="btn btn-dark">Ver más</a>
+{% macro mostrar_evento(evento) %}
+    <div class="col-md-4">
+        <div class="container" id="contenedor">
+            <!--Pricipio card deck-->
+            <div class="card-deck" id="eventos">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}" class="card-img-top"
+                         alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ evento["nombre"] }}</h5>
+                        <p class="card-text"><span class="oi oi-calendar" title="calendar"></span>{{ evento["fecha"] }}</p>
+                        <p class="card-text"><span class="oi oi-clock" title="clock"></span>{{ evento["hora"] }}</p>
+                        <p class="card-text"><span class="oi oi-browser" title="map"></span>{{ evento["tipo"] }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </p>
+                        <a href="{{ url_for('eventogeneral',id=evento["eventoId"]) }}" type="button"
+                           class="btn btn-dark">Ver más</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Final card deck-->
+    </div>
+{% endmacro %}
+
+{% macro evento_admin(evento) %}
+
+    <div class="container" id="espaciogrillaadmin">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panelcontrol">
+                    <p>{{ evento["nombre"] }}</p>
+                    <p>Visibilidad<i class="fa fa-eye iconos"></i></p>
+                    <a href="{{ url_for('evento_en_detalle_admin',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-dark">Ver
+                        Evento</a>
+
+                    <a href="{{ url_for('eliminarEventoAdmin',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-danger">Eliminar Evento</a>
+                    <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-warning">Editar Evento<i class="fa fa-edit iconos"></i></a>
+
                 </div>
             </div>
         </div>
     </div>
-    <!--Final card deck-->
-</div>
-{% endmacro %}
-
-{% macro evento_admin(evento)%}
-
-<div class="container" id="espaciogrillaadmin">
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="panelcontrol">
-                <p>{{evento["nombre"]}}</p>
-                <p>Visibilidad<i class="fa fa-eye iconos"></i></p>
-                <a href="{{url_for('evento_en_detalle_admin',id=evento["eventoId"])}}" type="button" class="btn btn-dark">Ver
-                Evento</a>
-
-                    <a href="{{ url_for('eliminarEventoAdmin',id=evento["eventoId"])}}" type="button" class="btn btn-danger">Eliminar Evento</a>
-                    <a href="{{ url_for('actualizar_evento',id=evento["eventoId"])}}" type="button" class="btn btn-warning">Editar Evento<i class="fa fa-edit iconos"></i></a>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 {% endmacro %}
 
 
-{% macro evento_admin_pendiente(evento)%}
+{% macro evento_admin_pendiente(evento) %}
 
-<div class="container" id="espaciogrillaadmin">
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="panelcontrol">
-                <p>{{evento["nombre"]}}</p>
-                <p>Visibilidad<i class="fa fa-eye-slash iconos"></i></p>
-                    <a href="{{url_for('evento_en_detalle_admin',id=evento["eventoId"])}}" type="button" class="btn btn-dark">Ver Evento</a>
-                    <a href="{{ url_for('aprobar_evento',id=evento["eventoId"])}}" type="button" class="btn btn-success">Aprobar Evento</a>
-                {#  <a href="{{ url_for('indexadmin')}}" type="button" class="btn btn-danger">Desaprobar Evento</a>#}
+    <div class="container" id="espaciogrillaadmin">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panelcontrol">
+                    <p>{{ evento["nombre"] }}</p>
+                    <p>Visibilidad<i class="fa fa-eye-slash iconos"></i></p>
+                    <a href="{{ url_for('evento_en_detalle_admin',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-dark">Ver Evento</a>
+                    <a href="{{ url_for('aprobar_evento',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-success">Aprobar Evento</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endmacro %}
 
 
-{% macro evento_user(evento)%}
-<div class="container" id="espaciogrillaadmin">
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="panelcontrol">
-                <p>{{evento["nombre"]}}</p>
-                {% if(evento["aprobado"]==1) %}
-                <p>Visibilidad<i class="fa fa-eye iconos"></i></p>
-                <p>Estado<i class="fa fa-check-circle iconos" id="iconosmiseventos_aprobado"></i></p>
-                {% else %}
-                <p>Visibilidad<i class="fa fa-eye-slash iconos"></i></p>
-                <p>Estado<i class="fa fa-times-circle iconos" id="iconos_miseventos_desaprobado"></i></p>
-                {% endif %}
-                <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button" class="btn btn-dark">Modificar Evento</a>
-                <a href="{{ url_for('eliminarEventoUser',id=evento["eventoId"]) }}" type="button" class="btn btn-danger">Eliminar Evento</a>
+{% macro evento_user(evento) %}
+    <div class="container" id="espaciogrillaadmin">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="panelcontrol">
+                    <p>{{ evento["nombre"] }}</p>
+                    {% if(evento["aprobado"]==1) %}
+                        <p>Visibilidad<i class="fa fa-eye iconos"></i></p>
+                        <p>Estado<i class="fa fa-check-circle iconos" id="iconosmiseventos_aprobado"></i></p>
+                    {% else %}
+                        <p>Visibilidad<i class="fa fa-eye-slash iconos"></i></p>
+                        <p>Estado<i class="fa fa-times-circle iconos" id="iconos_miseventos_desaprobado"></i></p>
+                    {% endif %}
+                    <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-dark">Modificar Evento</a>
+                    <a href="{{ url_for('eliminarEventoUser',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-danger">Eliminar Evento</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endmacro %}
 
 
 {% macro comentarios(comentario) %}
-<div class="row">
-    <div class="col-md-2">
+    <div class="row">
+        <div class="col-md-2">
 
-    </div>
-    <div class="col-md-8">
-        <div class="media">
-            <div class="media-body">
-{#                <img class="d-flex rounded-circle avatar z-depth-1-half mr-3"
-                     src="{{url_for('static', filename='imagenes/avatar-5.jpg')}}"
-                     alt="Avatar">                                                      #}
+        </div>
+        <div class="col-md-8">
+            <div class="media">
                 <div class="media-body">
-                    <h5 class="mt-0 font-weight-bold blue-text">{{comentario.usuario.nombre}}</h5>
-                    <h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock" title="clock"></i>{{ comentario["fechahora"] }}</h5>
-                    <textarea class="form-control">{{comentario["contenido"]}}</textarea>
-                </div>
-                {#<div class="media mt-3 shadow-textarea">
+
                     <div class="media-body">
-                        <h5 class="mt-0 font-weight-bold blue-text">@UserLogueado</h5>
-                        <div class="form-group basic-textarea rounded-corners">
-                            <textarea class="form-control z-depth-1" id="exampleFormControlTextarea345" rows="3"
-                                      placeholder="Escribe un comentario..."></textarea>
-
-
-                        </div>
+                        <h5 class="mt-0 font-weight-bold blue-text">{{ comentario.usuario.nombre }}<h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock" title="clock"></i>{{ comentario["fechahora"] }}</h5>
+                        <textarea class="form-control">{{ comentario["contenido"] }}</textarea>
                     </div>
-                </div>#}
+
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-2">
+        <div class="col-md-2">
 
+        </div>
     </div>
-</div>
 {% endmacro %}
 
 
 {% macro comentariosadmin (comentario) %}
-<div class="row">
-    <div class="col-md-2">
+    <div class="row">
+        <div class="col-md-2">
 
-    </div>
-    <div class="col-md-8">
-        <div class="media">
-            <div class="media-body">
-             {#    <img class="d-flex rounded-circle avatar z-depth-1-half mr-3"
-                     src="{{url_for('static', filename='imagenes/avatar-5.jpg')}}"
-                     alt="Avatar"> #}
+        </div>
+        <div class="col-md-8">
+            <div class="media">
                 <div class="media-body">
-                    <h5 class="mt-0 font-weight-bold blue-text">{{comentario.usuario.nombre}}
-                        <a href="{{ url_for('eliminarComentario',id=comentario["comentarioId"]) }}" type="button" class="btn btn-primary botonescomentarios">Eliminar Comentario</a>
-                    </h5>
-                    <h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock" title="clock"></i>{{ comentario["fechahora"] }}</h5>
-                    <textarea class="form-control">{{comentario["contenido"]}}</textarea>
-                </div>
-                {#<div class="media mt-3 shadow-textarea">
+
                     <div class="media-body">
-                        <h5 class="mt-0 font-weight-bold blue-text">@Admin</h5>
-                        <div class="form-group basic-textarea rounded-corners">
-                            <textarea class="form-control z-depth-1" id="exampleFormControlTextarea345" rows="3"
-                                      placeholder="Escribe un comentario..."></textarea>
-                        </div>
+                        <h5 class="mt-0 font-weight-bold blue-text">{{ comentario.usuario.nombre }}
+                            <a href="{{ url_for('eliminarComentario',id=comentario["comentarioId"]) }}" type="button" class="btn btn-primary botonescomentarios">Eliminar Comentario</a>
+                        </h5>
+                        <h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock"
+                                                                       title="clock"></i>{{ comentario["fechahora"] }}
+                        </h5>
+                        <textarea class="form-control">{{ comentario["contenido"] }}</textarea>
                     </div>
-                </div>#}
+
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-2">
+        <div class="col-md-2">
 
+        </div>
     </div>
-</div>
 {% endmacro %}
 
 {% macro mostrar_campo(campo) %}<!--Mostrar campos registro User-->
-	{{ campo.label }} <!-- Mostrar etiqueta -->
-	{{ campo(**kwargs)|safe }} <!-- Mostrar campo -->
-	{{mostrar_error(campo)}}  <!-- Llamar a macro que muestra el error -->
+    {{ campo.label }} <!-- Mostrar etiqueta -->
+    {{ campo(**kwargs)|safe }} <!-- Mostrar campo -->
+    {{ mostrar_error(campo) }}  <!-- Llamar a macro que muestra el error -->
 {% endmacro %}
 <!-- Macro que se encarga de mostrar los campos de boton tipo submit para formulario CONSULTAR NO SE VE AZUL-->
 {% macro mostrar_campo_submit(campo) %}
     {{ campo(**kwargs)|safe }}
-     <!-- Mostrar campo -->
+    <!-- Mostrar campo -->
 {% endmacro %}
 
 <!-- Macro que se encarga de mostrar los errores de validación -->
 {% macro mostrar_error(campo) %}
-	{% if campo.errors %} <!--Si existen errores -->
-	  <div class="alert alert-danger" role="alert">
-	  {% for error in campo.errors %} <!--Recorrer errrores-->
-	   	{{ error }}<br><!--Mostrar error -->
-	  {% endfor %}
-	  </div>
-	{% endif %}
+    {% if campo.errors %} <!--Si existen errores -->
+        <div class="alert alert-danger" role="alert">
+            {% for error in campo.errors %} <!--Recorrer errrores-->
+                {{ error }}<br><!--Mostrar error -->
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endmacro %}
 
 
 {% macro mostrar_campo_comentario(campo) %}<!--Mostrar campos registro User-->
-	<h4>
+    <h4>
         {{ campo.label }}<!-- Mostrar etiqueta -->
     </h4>
     <div class="form-group">
         {{ campo(**kwargs)|safe }} <!-- Mostrar campo -->
     </div>
 
-	{{mostrar_error(campo)}}  <!-- Llamar a macro que muestra el error -->
-{% endmacro %}
-<!-- Macro que se encarga de mostrar los campos de boton tipo submit para formulario CONSULTAR NO SE VE AZUL-->
-{% macro mostrar_campo_submit(campo) %}
-    {{ campo(**kwargs)|safe }}
-     <!-- Mostrar campo -->
+    {{ mostrar_error(campo) }}  <!-- Llamar a macro que muestra el error -->
 {% endmacro %}

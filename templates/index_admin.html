@@ -1,18 +1,19 @@
 {% from "macros.html" import evento_admin %}
 {% from "macros.html" import evento_admin_pendiente %}
-{% extends "main.html"%}
+{% extends "main.html" %}
 {% block estilos %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
 {% endblock %}
 {% block contenido %}
 
+    <h1>Eventos Aprobados</h1>
+    {% for evento in lista_eventos_aprobados %}
+        {{ evento_admin(evento) }}
+    {% endfor %}
 
-<h1>Eventos Aprobados</h1>
-{% for evento in lista_eventos_aprobados %}
-{{ evento_admin(evento) }}
-{% endfor %}
-<h1>Eventos Pendientes de Aprobación</h1>
-{% for evento in lista_eventos_pendientes %}
-{{ evento_admin_pendiente(evento) }}
-{% endfor %}
+    <h1>Eventos Pendientes de Aprobación</h1>
+    {% for evento in lista_eventos_pendientes %}
+        {{ evento_admin_pendiente(evento) }}
+    {% endfor %}
+
 {% endblock %}

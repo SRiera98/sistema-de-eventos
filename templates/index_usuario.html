@@ -1,63 +1,65 @@
 {% from "macros.html" import mostrar_evento %}
 {% from "macros.html" import mostrar_campo %}
 {% from "macros.html" import mostrar_campo_submit %}
-{% extends "main.html"%}
+{% extends "main.html" %}
 {% block estilos %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
 {% endblock %}
 {% block iconos %}
     <link href="{{ url_for('static', filename='open-iconic/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
 {% endblock %}
 {% block contenido %}
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<h2>Filtrar por</h2>
-          <!--Enviar el formulario solamente por GET -->
-					<form method="GET" action="{{url_for('index')}}" enctype="multipart/form-data" class="form-inline">
-						<div class="form-group">
-							{{mostrar_campo(formulario.desde_fecha,class='form-control')}}
-						</div>
-						<div class="form-group">
-							{{mostrar_campo(formulario.hasta_fecha,class='form-control')}}
-						</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Filtrar por</h2>
+                <!--Enviar el formulario solamente por GET -->
+                <form method="GET" action="{{ url_for('index') }}" enctype="multipart/form-data" class="form-inline">
+                    <div class="form-group">
+                        {{ mostrar_campo(formulario.desde_fecha,class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ mostrar_campo(formulario.hasta_fecha,class='form-control') }}
+                    </div>
 
-						<div class="form-group">
-							{{mostrar_campo(formulario.categoria,class='form-control')}}
-						</div>
-						{{mostrar_campo_submit(formulario.envio_filtrar,class='btn btn-primary')}}
-						{#<button type="submit" class="btn btn-primary"><span class="oi oi-magnifying-glass" title="magnifying-glass" aria-hidden="true"></span>Buscar</button>#}
-					</form>
-				</div>
-			</div>
-		</div>
-<div class="paginacion_espacio">
-    <div class="row" >
-{% for evento in listar_eventos.items %}
-{{ mostrar_evento(evento) }}
-{% endfor %}
-</div>
-<div class="paginacion">
-	{% if listar_eventos.has_prev %}
-      <!--Al llamar a index enviar los datos cargados en el formulario-->
-		<a href="{{ url_for('index', pag=listar_eventos.prev_num, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data ) }}">Anterior</a> <!--Si hay pagina anterior llamo a paginacion pero con la pagina anterior, sino llamo a un texto Anterior-->
-	{% else %} <a>Anterior</a> {% endif %}
+                    <div class="form-group">
+                        {{ mostrar_campo(formulario.categoria,class='form-control') }}
+                    </div>
+                    {{ mostrar_campo_submit(formulario.envio_filtrar,class='btn btn-primary') }}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="paginacion_espacio">
+        <div class="row">
+            {% for evento in listar_eventos.items %}
+                {{ mostrar_evento(evento) }}
+            {% endfor %}
+        </div>
+        <div class="paginacion">
+            {% if listar_eventos.has_prev %}
+                <!--Al llamar a index enviar los datos cargados en el formulario-->
+                <a href="{{ url_for('index', pag=listar_eventos.prev_num, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data ) }}">Anterior</a>
+                <!--Si hay pagina anterior llamo a paginacion pero con la pagina anterior, sino llamo a un texto Anterior-->
+            {% else %} <a>Anterior</a> {% endif %}
 
-	{% for i in range(1,(listar_eventos.pages+1)) %}
-	{% if listar_eventos.page == i %}
-	<a>{{i}}</a> <!--Si la pagina actual es coincidente con el indice i muestro solo el texto del numero-->
-	{% else %}
-    <!--Al llamar a index enviar los datos cargados en el formulario-->
-		<a href="{{ url_for('index', pag=i, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data) }}"> {{i}} </a> <!--Si no llamo a la pagina con el valor del numero de pagina-->
-	{% endif %}
-	{% endfor %}
+            {% for i in range(1,(listar_eventos.pages+1)) %}
+                {% if listar_eventos.page == i %}
+                    <a>{{ i }}</a>
+                    <!--Si la pagina actual es coincidente con el indice i muestro solo el texto del numero-->
+                {% else %}
+                    <!--Al llamar a index enviar los datos cargados en el formulario-->
+                    <a href="{{ url_for('index', pag=i, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data) }}"> {{ i }} </a>
+                    <!--Si no llamo a la pagina con el valor del numero de pagina-->
+                {% endif %}
+            {% endfor %}
 
-	{% if listar_eventos.has_next %}
-    <!--Al llamar a index enviar los datos cargados en el formulario-->
-		<a href="{{ url_for('index', pag=listar_eventos.next_num, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data) }}">Siguiente</a>
-	{% else %} <a>Siguiente</a> {% endif %}
-</div>
-</div>
+            {% if listar_eventos.has_next %}
+                <!--Al llamar a index enviar los datos cargados en el formulario-->
+                <a href="{{ url_for('index', pag=listar_eventos.next_num, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data) }}">Siguiente</a>
+            {% else %} <a>Siguiente</a> {% endif %}
+        </div>
+    </div>
 {% endblock %}
 
 

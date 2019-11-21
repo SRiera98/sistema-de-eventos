@@ -1,53 +1,51 @@
 {% from "macros.html" import mostrar_campo %}
 {% from "macros.html" import mostrar_campo_submit %}
-{% extends "main.html"%}
+{% extends "main.html" %}
 {% block estilos %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
 {% endblock %}
 
 
 {% with messages=get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-success">
-            {{ message }}
-        </div>
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
 
         {% endfor %}
     {% endif %}
 {% endwith %}
 
 
-
-
 {% block contenido %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div id="registro">
-                <center>
-                    <img src="{{url_for('static', filename='imagenes/eventflarelogobig.png')}}">
-                </center>
-                <form method="POST" action="{{ url_for('login') }}" enctype="multipart/form-data">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="registro">
+                    <center>
+                        <img src="{{ url_for('static', filename='imagenes/eventflarelogobig.png') }}">
+                    </center>
+                    <form method="POST" action="{{ url_for('login') }}" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
-                    {{mostrar_campo(ingresar.email, class='form-control')}}
+                        {{ mostrar_campo(ingresar.email, class='form-control') }}
 
-                    {{mostrar_campo(ingresar.contrasena, class='form-control')}}
+                        {{ mostrar_campo(ingresar.contrasena, class='form-control') }}
 
-                    <div class="form-group row">
-                        <div class="col-md-4">
-                            {{mostrar_campo_submit(ingresar.iniciar,class='btn btn-primary botonesevento')}}
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                {{ mostrar_campo_submit(ingresar.iniciar,class='btn btn-primary botonesevento') }}
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <a href="{{ url_for('registro_usuario') }}" name="cancel" id="cancelar"
+                                   class="btn btn-danger botonesevento">Registrarse</a>
+                            </div>
                         </div>
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4">
-                            <a href="{{ url_for('registro_usuario')}}" name="cancel" id="cancelar"
-                               class="btn btn-danger botonesevento">Registrarse</a>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
