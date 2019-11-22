@@ -1,7 +1,9 @@
 
 def mysql_query(query):
     return query.statement.compile(compile_kwargs={"literal_binds": True})
-
+#En estas 5 funciones lo unico que hacemos es enviar en cada una de ellas un objeto de tipo formulario y luego se
+#imprime en consola cada uno de los atributos de ese objeto de tipo formulario accediendo a los mismos,
+# es un formulario en particular.
 def mostrar_datos(registro):
     print(registro.nombre.data)
     print(registro.apellido.data)

@@ -17,7 +17,9 @@ def enviarMailAsincronico(app, msg):
             mail.send(msg)
             print("Mail enviado correctamente")
 
-        #Mostrar errores por consola
+        #Mostrar errores por consola.
+        #Enviamos el error sucedido (dependiendo a que except entre) a la funcion logger parseandolo
+        # a string junto con la ubicacion del error hardcodeada, y ademas imprimiendo el error por la consola.
         except smtplib.SMTPAuthenticationError as e:
             print("Error de autenticación, MAIL_USER o MAIL_PASSWORD incorrectos \n"+str(e))
             logger(str(e),"enviarMailAsincronico in funciones_mail.py")
@@ -30,7 +32,7 @@ def enviarMailAsincronico(app, msg):
         except smtplib.SMTPException as e: #Error generico
             print("Error: "+str(e))
             logger(str(e), "enviarMailAsincronico in funciones_mail.py")
-        except OSError as e:
+        except OSError as e: #Excepcion generica para errores de entrada/salida para capturar el error del puerto bloqueado.
             logger(str(e), "enviarMailAsincronico in funciones_mail.py")
 
 #Función que genera el hilo que enviará el mail

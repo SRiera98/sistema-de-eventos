@@ -1,7 +1,6 @@
 {% from "macros.html" import mostrar_campo_comentario %}
 {% from "macros.html" import mostrar_campo_submit %}
-{% from "macros.html" import comentarios %}
-{% from "macros.html" import comentariosadmin %}
+{% from "macros.html" import comentarios with context %}
 {% extends "main.html" %}
 {% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
@@ -49,11 +48,7 @@
                         <h4 class="comentariogeneral">Comentarios</h4>
                     </div>
                     {% for comentario in evento.comentarios %}
-                        {% if comentario.usuarioId == current_user.usuarioId %}
-                            {{ comentariosadmin(comentario) }}
-                        {% else %}
-                            {{ comentarios(comentario) }}
-                        {% endif %}
+                        {{ comentarios(comentario) }}
                     {% endfor %}
                 </div>
             </div>

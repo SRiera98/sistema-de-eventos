@@ -1,17 +1,11 @@
-from run import db,app
-from flask import render_template,redirect, url_for
-from flask import Flask
+from run import db
 from modelos import *
 from sqlalchemy.exc import SQLAlchemyError
-from errores import logger, mostrarTemplateError
+from errores import logger
 
 
 #----------------Comienzo de funciones de Base de Datos-------
-@app.route('/usuario/list')
-def listarUsuarios():
-    # EJ: usuario/list
-    usuarios = db.session.query(Usuario).all() #Trae todo de usuarios
-    return render_template('usuarios.html',usuarios=usuarios,filtro="")
+
 
 def crearUsuario(nombre,apellido,email,password,admin=False):
     # Crear un usuario
@@ -26,40 +20,8 @@ def crearUsuario(nombre,apellido,email,password,admin=False):
         logger(str(e._message()),"Funcion crearUsuario in funciones_basedatos.py")
         return False
     return usuario
-    #Envía la persona a la vista
-    #return render_template('index',usuario=usuario)
-
-@app.route('/usuario/eliminar/<id>')
-def eliminarUsuario(id):
-    # EJ: usuario/eliminar/1
-    #Obtener usuario por id
-    usuario = db.session.query(Usuario).get(id)
-    #Eliminar de la db
-    db.session.delete(usuario)
-    #Hacer commit de los cambios
-    try:
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        logger(str(e._message()),"Funcion EliminarUsuario in funciones_basedatos.py")
-        return mostrarTemplateError()
-    return redirect(url_for('listarUsuarios'))
-
-@app.route('/usuario/getById/<id>')
-def getUsuarioById(id):
-    # EJ: usuario/getById/2
-    # Filtra por id
-    usuario =  db.session.query(Usuario).get(id) #Busca el usuario con ese id
-    #Envía el usuario a la vista
-    return render_template('usuario.html',usuario=usuario)
 
 #------------------------------------------------------------------------------
-
-@app.route('/evento/list')
-def listarEventos():
-    # EJ: evento/list
-    eventos = db.session.query(Evento).all() #Trae todo de eventos
-    return render_template('eventos.html',eventos=eventos,filtro="")
 
 
 def crearEvento(nombre,fecha,hora,descripcion,imagen,tipo,usuarioId,aprobado=False):
@@ -76,8 +38,7 @@ def crearEvento(nombre,fecha,hora,descripcion,imagen,tipo,usuarioId,aprobado=Fal
         db.session.rollback()
         logger(str(e._message()),"Funcion crearEvento in funciones_basedatos.py")
         return False
-    #Envía la persona a la vista
-#    return render_template('evento.html',evento=evento)
+
 
 def actualizarEvento(evento):
     db.session.add(evento)
@@ -89,22 +50,8 @@ def actualizarEvento(evento):
         return False
 
 
-
-@app.route('/evento/getById/<id>')
-def getEventoById(id):
-    # EJ: evento/getById/2
-    # Filtra por id
-    evento =  db.session.query(Evento).get(id) #Busca el evento con ese id
-    #Envía el evento a la vista
-    return render_template('evento.html',evento=evento)
-
 #----------------------------------------------------------------------------
 
-@app.route('/comentario/list')
-def listarComentarios():
-    # EJ: comentario/list
-    comentarios = db.session.query(Comentario).all() #Trae todo de comentarios
-    return render_template('comentarios.html',comentarios=comentarios,filtro="")
 
 def crearComentario(contenido,usuarioId,eventoId):
     usuario=db.session.query(Usuario).get(usuarioId)
@@ -123,13 +70,4 @@ def crearComentario(contenido,usuarioId,eventoId):
         logger(str(e._message()),"Funcion crearComentario in funciones_basedatos.py")
         return False
 
-
-
-@app.route('/comentario/getById/<id>')
-def getComentarioById(id):
-    # EJ: comentario/getById/2
-    # Filtra por id
-    comentario =  db.session.query(Comentario).get(id) #Busca el comentario con ese id
-    #Envía el comentario a la vista
-    return render_template('comentario.html',comentario=comentario)
 #----------------Final de funciones de Base de Datos-------""""""

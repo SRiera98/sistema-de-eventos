@@ -1,4 +1,4 @@
-{% from "macros.html" import comentariosadmin %}
+{% from "macros.html" import comentarios with context %}
 {% extends "main.html" %}
 {% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
@@ -34,7 +34,7 @@
 
         </div>
         {% for comentario in evento.comentarios %}
-            {{ comentariosadmin(comentario) }}
+            {{ comentarios(comentario) }}
         {% endfor %}
 
 

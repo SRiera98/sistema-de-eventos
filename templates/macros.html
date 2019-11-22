@@ -14,10 +14,10 @@
                         <p class="card-text">
                             <small class="text-muted">Last updated 3 mins ago</small>
                         </p>
-                        {% if evento.usuario.admin==0 %}
-                        <a href="{{ url_for('eventogeneral',id=evento["eventoId"]) }}" type="button" class="btn btn-dark">Ver más</a>
+                        {% if current_user.admin %}
+                            <a href="{{ url_for('evento_en_detalle_admin',id=evento["eventoId"]) }}" type="button" class="btn btn-dark">Ver más</a>
                         {% else %}
-                        <a href="{{ url_for('evento_en_detalle_admin',id=evento["eventoId"]) }}" type="button" class="btn btn-dark">Ver más</a>
+                            <a href="{{ url_for('eventogeneral',id=evento["eventoId"]) }}" type="button" class="btn btn-dark">Ver más</a>
                         {% endif %}
                     </div>
                 </div>
@@ -99,31 +99,6 @@
 {% macro comentarios(comentario) %}
     <div class="row">
         <div class="col-md-2">
-
-        </div>
-        <div class="col-md-8">
-            <div class="media">
-                <div class="media-body">
-
-                    <div class="media-body">
-                        <h5 class="mt-0 font-weight-bold blue-text">{{ comentario.usuario.nombre }}<h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock" title="clock"></i>{{ comentario["fechahora"] }}</h5>
-                        <textarea class="form-control">{{ comentario["contenido"] }}</textarea>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-
-        </div>
-    </div>
-{% endmacro %}
-
-
-{% macro comentariosadmin (comentario) %}
-    <div class="row">
-        <div class="col-md-2">
-
         </div>
         <div class="col-md-8">
             <div class="media">
@@ -131,12 +106,12 @@
 
                     <div class="media-body">
                         <h5 class="mt-0 font-weight-bold blue-text">{{ comentario.usuario.nombre }}
-                            <a href="{{ url_for('eliminarComentario',id=comentario["comentarioId"]) }}" type="button" class="btn btn-primary botonescomentarios">Eliminar Comentario</a>
+                            {% if current_user.admin or current_user.usuarioId==comentario.usuarioId %}
+                                <a href="{{ url_for('eliminarComentario',id=comentario["comentarioId"]) }}" type="button" class="btn btn-primary botonescomentarios">Eliminar Comentario</a>
+                            {% endif %}
                         </h5>
-                        <h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock"
-                                                                       title="clock"></i>{{ comentario["fechahora"] }}
-                        </h5>
-                        <textarea class="form-control">{{ comentario["contenido"] }}</textarea>
+                        <h5 class="mt-0 font-weight-bold blue-text"><i class="oi oi-clock" title="clock"></i>{{ comentario["fechahora"] }}</h5>
+                        <textarea readonly class="form-control">{{ comentario["contenido"] }}</textarea>
                     </div>
 
                 </div>
@@ -147,6 +122,7 @@
         </div>
     </div>
 {% endmacro %}
+
 
 {% macro mostrar_campo(campo) %}<!--Mostrar campos registro User-->
     {{ campo.label }} <!-- Mostrar etiqueta -->
