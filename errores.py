@@ -38,6 +38,5 @@ def internal_server_error(e):
     return render_template('errores/500.html'), 500
 
 def mostrarTemplateError():
-    print("entro al TEMPLATE!")
     return render_template('errores/500.html')
 

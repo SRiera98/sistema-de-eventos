@@ -13,24 +13,18 @@ def listarUsuarios():
     usuarios = db.session.query(Usuario).all() #Trae todo de usuarios
     return render_template('usuarios.html',usuarios=usuarios,filtro="")
 
-@app.route('/usuario/crear/<nombre>/<apellido>/<email>/<password>/<admin>')
 def crearUsuario(nombre,apellido,email,password,admin=False):
     # Crear un usuario
     usuario = Usuario(nombre=nombre,apellido=apellido, email=email,passwrd=password, admin=admin)
-    print(f"EL nombre es{usuario.nombre}")
-    print(usuario)
     # Agregar a db
     db.session.add(usuario)
     # Hacer commit de los cambios
     try:
         db.session.commit()
-        print("Commiteando.......\n\n\n")
     except SQLAlchemyError as e:
-        print("Entrando a except.")
         db.session.rollback()
         logger(str(e._message()),"Funcion crearUsuario in funciones_basedatos.py")
         return False
-    print("RETORNANDO USUARIO......")
     return usuario
     #Envía la persona a la vista
     #return render_template('index',usuario=usuario)
@@ -67,7 +61,7 @@ def listarEventos():
     eventos = db.session.query(Evento).all() #Trae todo de eventos
     return render_template('eventos.html',eventos=eventos,filtro="")
 
-@app.route('/evento/crear/<nombre>/<fecha>/<hora>/<descripcion>/<imagen>/<tipo>/<usuarioId>')
+
 def crearEvento(nombre,fecha,hora,descripcion,imagen,tipo,usuarioId,aprobado=False):
     #Instancio usuario a asociar con evento.
     usuario=db.session.query(Usuario).get(usuarioId)
@@ -85,7 +79,6 @@ def crearEvento(nombre,fecha,hora,descripcion,imagen,tipo,usuarioId,aprobado=Fal
     #Envía la persona a la vista
 #    return render_template('evento.html',evento=evento)
 
-@app.route('/evento/actualizar/<evento>')
 def actualizarEvento(evento):
     db.session.add(evento)
     try:
@@ -113,7 +106,6 @@ def listarComentarios():
     comentarios = db.session.query(Comentario).all() #Trae todo de comentarios
     return render_template('comentarios.html',comentarios=comentarios,filtro="")
 
-@app.route('/comentario/crear/<contenido>/<usuarioId>/<eventoId>')
 def crearComentario(contenido,usuarioId,eventoId):
     usuario=db.session.query(Usuario).get(usuarioId)
     evento=db.session.query(Evento).get(eventoId)
@@ -130,8 +122,7 @@ def crearComentario(contenido,usuarioId,eventoId):
         db.session.rollback()
         logger(str(e._message()),"Funcion crearComentario in funciones_basedatos.py")
         return False
-    #Envía el comentario a la vista
-    #return render_template('comentario.html',comentario=comentario)
+
 
 
 @app.route('/comentario/getById/<id>')

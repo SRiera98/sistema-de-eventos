@@ -1,6 +1,6 @@
 body{
-    background-image:url('../imagenes/fondo.jpg');
-    background-size: 100%;
+    background-image:url('../imagenes/gravel.png');
+    background-repeat: repeat;
 }
 .card{
     border:5px none;
@@ -26,14 +26,7 @@ body{
     padding:10px 60px 10px 60px;
     margin-left:25%;
 }
-#contenedor{
-    border: 1px none;
-    background-color: rgba(0,255,0,0.6);
-    padding-bottom:15px;
-    padding-right:15px;
-    padding-left:15px;
-    margin-top:15px;
-}
+
 #registro{
     border:10px none;
     background-color: rgba(44,182,35,0.7);

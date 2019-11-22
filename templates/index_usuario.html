@@ -12,7 +12,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>Filtrar por</h2>
+                <h4 class="colorfooter">Filtrar por</h4>
                 <!--Enviar el formulario solamente por GET -->
                 <form method="GET" action="{{ url_for('index') }}" enctype="multipart/form-data" class="form-inline">
                     <div class="form-group">
@@ -30,7 +30,6 @@
             </div>
         </div>
     </div>
-    <div class="paginacion_espacio">
         <div class="row">
             {% for evento in listar_eventos.items %}
                 {{ mostrar_evento(evento) }}
@@ -59,7 +58,6 @@
                 <a href="{{ url_for('index', pag=listar_eventos.next_num, desde_fecha=formulario.desde_fecha.data, hasta_fecha=formulario.hasta_fecha.data, categoria=formulario.categoria.data) }}">Siguiente</a>
             {% else %} <a>Siguiente</a> {% endif %}
         </div>
-    </div>
 {% endblock %}
 
 
