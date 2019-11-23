@@ -1,10 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
-
 from errores import logger
 from modelos import *
 from flask import jsonify,request
 from run import db,app,csrf
-from funciones_mail import enviarMailThread
+from funciones_mail import configurarYEnviarMail
 
 
 #ANALIZAR COMO ACCEDER AL TRY EXCEPT DE LOS ERRORES DE BD, DADO QUE SE QUEDA EN EL ERROR 404 DEL GET_OR_404(ID)
@@ -66,7 +65,7 @@ def apiEliminarEventoPendiente(id):
 def apiAprobarEventoPendiente(id):
     evento=db.session.query(Evento).get_or_404(id)
     evento.aprobado=True
-    enviarMailThread(evento.usuario.email, '¡Tu Evento fue Aprobado!', 'mail/eventoaprobado', evento=evento) #Enviamos mail de aprobacion.
+    configurarYEnviarMail(evento.usuario.email, '¡Tu Evento fue Aprobado!', 'mail/eventoaprobado', evento=evento) #Enviamos mail de aprobacion.
     db.session.add(evento)
     try:
         db.session.commit()

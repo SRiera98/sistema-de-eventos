@@ -141,6 +141,7 @@ footer{
 
 .paginacion{
     margin: 20px 0;
+    padding-left: 10px;
 }
 .paginacion a{
     text-align: center;

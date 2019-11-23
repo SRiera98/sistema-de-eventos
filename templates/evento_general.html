@@ -11,7 +11,9 @@
 {% block contenido %}
     <div class="container">
         <div class="row">
-            <h1>{{ evento["nombre"] }}</h1>
+            <div class="col-md-12">
+                <h1>{{ evento["nombre"] }}</h1>
+            </div>
             <div class="col-md-8">
                 <div id="imagenevento">
                     <img src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}" class="card-img-top"
@@ -55,6 +57,7 @@
                 </div>
             </div>
         </div>
+
 
     </div>
 

@@ -1,3 +1,5 @@
+{% from "macros.html" import mostrar_campo_comentario %}
+{% from "macros.html" import mostrar_campo_submit %}
 {% from "macros.html" import comentarios with context %}
 {% extends "main.html" %}
 {% block estilos %}
@@ -10,7 +12,9 @@
     <div class="container">
         <div class="row">
             <div>
-                <h1>{{ evento["nombre"] }}</h1>
+                <div class="col-md-12">
+                    <h1>{{ evento["nombre"] }}</h1>
+                </div>
                 <div class="col-md-8">
                     <div id="imagenevento">
                         <img src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}" class="card-img-top"
@@ -24,8 +28,7 @@
                     <p class="card-text"><span class="oi oi-caret-right" title="caret-right"></span>{{ evento["tipo"] }}
                     </p>
                     {% if(evento["aprobado"]==0) %}
-                        <a href="{{ url_for('aprobar_evento',id=evento["eventoId"]) }}" type="button"
-                           class="btn btn-success">Aprobar Evento</a>
+                        <a href="{{ url_for('aprobar_evento',id=evento["eventoId"]) }}" type="button" class="btn btn-success">Aprobar Evento</a>
                     {% endif %}
                 </div>
             </div>
@@ -33,9 +36,32 @@
                class="btn btn-warning">Eliminar Todos los Comentarios</a>
 
         </div>
-        {% for comentario in evento.comentarios %}
-            {{ comentarios(comentario) }}
-        {% endfor %}
+        <div class="container">
+            <div class="row">
+                <form method="POST" action="{{ url_for('agregar_comentario',id=evento["eventoId"]) }}"
+                      enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div style="padding-top: 20px;" class="col-md-6">
+                        {{ mostrar_campo_comentario(comentario.comentario,class='form-control',style="width: 1000px; height: 100px") }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ mostrar_campo_submit(comentario.submit,class='btn btn-primary botonesevento') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <h4 class="comentariogeneral">Comentarios</h4>
+                    </div>
+                    {% for comentario in evento.comentarios %}
+                        {{ comentarios(comentario) }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
 
     </div>

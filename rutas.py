@@ -167,11 +167,12 @@ def actualizar_evento(id):
 @app.route('/admin/evento-detallado/<id>')
 @login_required
 def evento_en_detalle_admin(id):
+    comentario=formularios.FormularioComentario()
     #Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin()==False:
         return redirect(url_for('index'))
     evento = db.session.query(Evento).get(id)
-    return render_template('evento_detallado_admin.html',evento=evento)
+    return render_template('evento_detallado_admin.html',evento=evento,comentario=comentario)
 
 @app.route('/index/evento/<id>',methods=["POST","GET"])
 def eventogeneral(id):
@@ -234,7 +235,7 @@ def aprobar_evento(id):
     email=evento.usuario.email
     # Crear hilo para enviar mail asincronico
     # Destino, Asunto, Template
-    enviarMailThread(email, '¡Tu Evento fue Aprobado!', 'mail/eventoaprobado',evento=evento)
+    configurarYEnviarMail(email, '¡Tu Evento fue Aprobado!', 'eventoaprobado',evento=evento)
     return redirect(url_for('indexadmin',evento=evento))
 
 @app.route('/iniciar-sesion/registrarse',methods=["POST","GET"])
@@ -256,7 +257,7 @@ def registro_usuario():
         flash('¡{} has sido registrado exitosamente!'.format(username))  # Mostrar mensaje de bienvenida
         #Establezco los parametros para enviar el email que confirma el registro
         # Destino, Asunto, Template
-        enviarMailThread(registro.email.data, '¡Gracias por Registrarte!', 'mail/usuarioregistrado')
+        configurarYEnviarMail(registro.email.data, '¡Gracias por Registrarte!', 'usuarioregistrado')
         return redirect(url_for('index'))
     return render_template('formulario_registro.html',registrar=registro)
 

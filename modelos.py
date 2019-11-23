@@ -1,7 +1,6 @@
-from run import db,app,login_manager
+from run import db,login_manager
 from werkzeug.security import generate_password_hash, check_password_hash #Permite generar y verificar pass con hash
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer #enlace para confirmacion de registro
-from flask_login import UserMixin, LoginManager
+from flask_login import UserMixin
 from flask import url_for
 
 #Creamos una clase que representara una tabla en la Base de Datos, en este caso "evento", donde tendremos de Clave Principal o primaria a el id del evento
