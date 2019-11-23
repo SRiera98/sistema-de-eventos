@@ -51,6 +51,10 @@ text-align:center;
 #eventocompleto{
     background-color: mediumaquamarine;
 }
+/*Borde para card deck*/
+.borde{
+    border: 1.2px #000000 solid;
+}
 /*CSS PARA COMENTARIOS DE EVENTO*/
 .media .avatar {
     width: 64px;

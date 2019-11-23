@@ -45,7 +45,7 @@ def login():
         # Si el usuario existe y se verifica la pass
         if usuario is not None and usuario.check_password(ingreso.contrasena.data):
             # Loguear usuario
-            login_user(usuario,False)
+            login_user(usuario,False) #El segundo parametro indica que no se utilizara la funcionalidad "Remember Me"
             username = ingreso.email.data
             flash('¡ Bienvenido {}!'.format(username))
             mostrar_datos_login(ingreso)

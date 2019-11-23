@@ -26,20 +26,22 @@
             </div>
 
         </div>
-        <div class="container">
-            <div class="row">
-                <form method="POST" action="{{ url_for('agregar_comentario',id=evento["eventoId"]) }}"
-                      enctype="multipart/form-data">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <div style="padding-top: 20px;" class="col-md-6">
-                        {{ mostrar_campo_comentario(nuevocomentario.comentario,class='form-control',style="width: 1000px; height: 100px") }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ mostrar_campo_submit(nuevocomentario.submit,class='btn btn-primary botonesevento') }}
-                    </div>
-                </form>
+        {% if current_user.is_authenticated %}
+            <div class="container">
+                <div class="row">
+                    <form method="POST" action="{{ url_for('agregar_comentario',id=evento["eventoId"]) }}"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div style="padding-top: 20px;" class="col-md-6">
+                            {{ mostrar_campo_comentario(nuevocomentario.comentario,class='form-control',style="width: 1000px; height: 100px") }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ mostrar_campo_submit(nuevocomentario.submit,class='btn btn-primary botonesevento') }}
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        {% endif %}
 
         <div class="container">
             <div class="row">

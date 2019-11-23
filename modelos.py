@@ -100,8 +100,8 @@ class Usuario(UserMixin,db.Model):
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    return Usuario.query.get(int(user_id)) #especificamos que el usuario se carga por id.
+def load_user(user_id): #Indica como obtener el usuario de la BD a partir del ID guardado en la sesion
+    return Usuario.query.get(int(user_id)) #especificamos que el usuario se obtiene por id.
 
 #Defino todos los campos, sus parametros y relaciones de la tabla comentario.
 class Comentario(db.Model):
