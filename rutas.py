@@ -9,7 +9,7 @@ from flask import flash #importar para mostrar mensajes flash
 import os.path #Nos permitira guardar las imagenes que carguemos en nuestro sistema
 from werkzeug.utils import secure_filename # Modifica el nombre del archivo a uno seguro
 from datetime import datetime #manejo de fechas.
-from run import db,app
+from run import db, app, login_manager
 import datetime #importar funciones de fecha
 from funciones_mail import *
 from funciones_basedatos import *

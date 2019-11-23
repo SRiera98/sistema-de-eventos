@@ -79,7 +79,7 @@ def apiAprobarEventoPendiente(id):
 
 
 #listar Eventos por Id
-#curl -i -H "Content-Type:apsplication/json" -H "Accept: application/json" http://localhost:8000/api/evento/2
+#curl -i -H "Content-Type:application/json" -H "Accept: application/json" http://localhost:8000/api/evento/2
 @app.route('/api/evento/<id>', methods=['GET'])
 def apiGetEventoById(id):
     evento =  db.session.query(Evento).get_or_404(id)
@@ -110,7 +110,7 @@ def apiEliminarComentario(id):
     return "", 204 #Retornamos el status 204, que indica que no hay contenido por retornar.
 
 #listar Comentario por Id
-#curl -i -H "Content-Type:apsplication/json" -H "Accept: application/json" http://localhost:8000/api/comentario/2
+#curl -i -H "Content-Type:application/json" -H "Accept: application/json" http://localhost:8000/api/comentario/2
 @app.route('/api/comentario/<id>', methods=['GET'])
 def apiGetComentarioById(id):
     comentario =  db.session.query(Comentario).get_or_404(id)

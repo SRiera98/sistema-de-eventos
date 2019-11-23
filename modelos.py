@@ -17,10 +17,10 @@ class Evento(db.Model):
     aprobado = db.Column(db.Boolean, nullable=False, default=False)
    # estado=db.Column(db.Boolean,nullable=False)
     #Relaciones entre evento y comentario (Uno a muchos) (En caso de eliminar un evento , con cascade eliminamos todos los comentarios que estaban asociados a ese evento):
-    comentarios = db.relationship("Comentario", back_populates="evento",cascade="all, delete-orphan") #back_populates establece la relacion entre las dos tablas, permitiendo asi que una modificacion en una tabla se aplique tambien en la otra si es necesario.
-    #Relacion entre evento y usuario (Uno a uno):
+    comentarios = db.relationship("Comentario", back_populates="evento",cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo evento de la clase Comentario
+    #Relacion entre usuario y evento (Uno a Muchos):
     usuarioId = db.Column(db.Integer, db.ForeignKey('usuario.usuarioId'), nullable=False)
-    usuario = db.relationship('Usuario',back_populates="eventos") #back_populates establece la relacion entre las dos tablas, permitiendo asi que una modificacion en una tabla se aplique tambien en la otra si es necesario.
+    usuario = db.relationship('Usuario',back_populates="eventos") #back_populates establece que existe una relacion con el atributo eventos de la clase Usuario
 
     #Funcion que determina que se mostrará si se imprime el objeto
     def __repr__(self):
@@ -63,10 +63,10 @@ class Usuario(UserMixin,db.Model):
     admin=db.Column(db.Boolean,nullable=False)
 
     #Relacion entre evento y usuario (Relacion Uno-Muchos):
-    eventos = db.relationship("Evento", back_populates="usuario", cascade="all, delete-orphan") #back_populates establece la relacion entre las dos tablas, permitiendo asi que una modificacion en una tabla se aplique tambien en la otra si es necesario.
+    eventos = db.relationship("Evento", back_populates="usuario", cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo usuario de la clase Evento
 
     # Relacion entre usuario y comentario (Relacion Uno-Muchos):
-    comentarios = db.relationship("Comentario", back_populates="usuario", cascade="all, delete-orphan")
+    comentarios = db.relationship("Comentario", back_populates="usuario", cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo usuario de la clase Comentario
 
 
     # PASSWRD es la contraseña no cifrada.
@@ -92,8 +92,7 @@ class Usuario(UserMixin,db.Model):
         if self.admin==1:
             aux=True
         return aux
-    """
-    """
+
 #Funcion que determina que se mostrará si se imprime el objeto
     def __repr__(self):
         return '<Usuario: %r %r %r %r %r>' % (self.nombre, self.apellido, self.email,self.password,self.admin) #imprime el objeto
@@ -111,11 +110,11 @@ class Comentario(db.Model):
 
     #Relacion entre evento y comentario
     eventoId = db.Column(db.Integer, db.ForeignKey('evento.eventoId'), nullable=False)
-    evento = db.relationship('Evento',back_populates="comentarios") #back_populates establece la relacion entre las dos tablas, permitiendo asi que una modificacion en una tabla se aplique tambien en la otra si es necesario.
+    evento = db.relationship('Evento',back_populates="comentarios") #back_populates establece que existe una relacion con el atributo comentarios de la clase Evento
 
     #Relacion entre usuario y comentario:
     usuarioId = db.Column(db.Integer, db.ForeignKey('usuario.usuarioId'), nullable=False)
-    usuario = db.relationship('Usuario', back_populates="comentarios") #back_populates establece la relacion entre las dos tablas, permitiendo asi que una modificacion en una tabla se aplique tambien en la otra si es necesario.
+    usuario = db.relationship('Usuario', back_populates="comentarios") #back_populates establece que existe una relacion con el atributo comentarios de la clase Usuario
 
 
     #Convertimos objeto de tipo Comentario a JSON
