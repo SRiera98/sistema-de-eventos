@@ -86,6 +86,11 @@ footer{
      color: #ff7e09 !important;
     font-weight: bolder !important;
 }
+.letras_detalles_evento{
+     color: #000000 !important;
+    font-weight: bolder !important;
+    font-size:medium;
+}
 .iconos{
     color:black;
     padding-left:7px ;

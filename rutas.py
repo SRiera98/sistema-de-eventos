@@ -144,12 +144,17 @@ def actualizar_evento(id):
         evento.descripcion=nuevoevento.descripcion.data
         evento.tipo=nuevoevento.opciones.data
         evento.imagen=nuevoevento.imagen.data
-        evento.aprobado=False
-
+        if current_user.admin:                 #Vericamos si el que lo actualiza es el admin,
+            evento.aprobado = evento.aprobado  # ya que no tendria sentido que el admin vuelva a aprobar el evento del admin
+        else:                                  #Si es admin se mantendra el valor de BD , si no se desaprobara el evento al actualizar.
+            evento.aprobado=False
         actualizacion=actualizarEvento(evento)
         if actualizacion==False:
             return mostrarTemplateError()
-        return redirect(url_for('eventos_usuario'))
+        if not current_user.admin:
+            return redirect(url_for('eventos_usuario'))
+        else:
+            return redirect(url_for('indexadmin'))
     else:
 
         nuevoevento.titulo.data = evento.nombre

@@ -64,6 +64,10 @@
                        class="btn btn-dark">Ver Evento</a>
                     <a href="{{ url_for('aprobar_evento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-success">Aprobar Evento</a>
+                    <a href="{{ url_for('eliminarEventoAdmin',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-danger">Eliminar Evento</a>
+                    <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button"
+                       class="btn btn-warning">Editar Evento<i class="fa fa-edit iconos"></i></a>
                 </div>
             </div>
         </div>
