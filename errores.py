@@ -1,6 +1,5 @@
 from flask import render_template,request, jsonify
 from run import app
-import time
 import datetime
 """En flask tenemos decoradores que sobreescriben comportamientos especificos."""
 #Manejar error de página no encontrada
@@ -15,6 +14,7 @@ def logger(error,suceso):
 #Manejamos error de pagina no encontrada.
 @app.errorhandler(404)
 def page_not_found(e):
+    logger(e, "Unknown")
     #Si la solicitud acepta json y no HTML
     if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
         #Responder con JSON

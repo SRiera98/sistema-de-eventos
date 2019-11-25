@@ -35,7 +35,7 @@
                                 {{ mostrar_campo(agregarevento.imagen, class='form-control') }}
                             {% endif %}
                             {% if(destino=="actualizar_evento") %}
-                                <img style="width:150px;margin-left:20px;margin-bottom:-75px;"
+                                <img class="actualizar_evento_imagen"
                                      src="{{ url_for('static', filename='imagenes/'+agregarevento.imagen.data) }}">
                             {% endif %}
                         </div>

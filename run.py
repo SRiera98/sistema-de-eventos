@@ -10,13 +10,14 @@ load_dotenv() #Cargamos las variables de nuestro entorno.
 
 #Sincronizacion con BD
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True   #Sigue las modificaciones que realicemos en tiempo real
-#Configuración de conexion de base de datos
+#Configuración de conexion de base de datos (Configuracion el Identificador
+# de Recursos Uniforme o URI que representa un conjunto de recursos)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://'+os.getenv('DB_USERNAME')+':'+os.getenv('DB_PASS')+'@localhost/bdproyecto'  #Formato de coneccion a la BD.
 
 #Configuraciones de mail
 app.config['SECRET_KEY'] =os.getenv('SECRET_KEY') #Trae la clave secreta del entorno, para que ninguna api de terceros se haga pasar por nosotros. Esta clave secreta se comprueba en varios lugares por el motivo antes mencionado
 
-
+#Realizamos configuraciones de MAIL
 app.config['MAIL_HOSTNAME'] = 'localhost' #Ip del host de salida
 app.config['MAIL_SERVER'] = 'smtp.gmail.com' #Dirección del servidor mail utilizado
 app.config['MAIL_PORT'] = 587  #Puerto del servidor mail saliente SMTP
@@ -41,4 +42,4 @@ if __name__ == '__main__': #Nos aseguramos que solo se ejecute el servidor cuand
     from rutas import *
     from rutas_api import *
     from errores import  *
-    app.run(port = 8000,debug=False)
+    app.run(port = 8000,debug=True)

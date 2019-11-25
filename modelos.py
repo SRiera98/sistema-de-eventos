@@ -14,7 +14,6 @@ class Evento(db.Model): # Obligatoriamente por el ORM de Flask-SQLAlchemy los ob
     imagen=db.Column(db.String(40),nullable=False)
     tipo=db.Column(db.String(15),nullable=False) #Tipo de EVENTO
     aprobado = db.Column(db.Boolean, nullable=False, default=False)
-   # estado=db.Column(db.Boolean,nullable=False)
     #Relaciones entre evento y comentario (Uno a muchos) (En caso de eliminar un evento , con cascade eliminamos todos los comentarios que estaban asociados a ese evento):
     comentarios = db.relationship("Comentario", back_populates="evento",cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo evento de la clase Comentario
     #Relacion entre usuario y evento (Uno a Muchos):
@@ -127,5 +126,3 @@ class Comentario(db.Model):
     def __repr__(self):
         return '<Comentario: %r %r Evento: %r Usuario: %r>' % (self.texto, self.fechahora,self.eventoId,self.usuarioId) #imprime el objeto
 
-#db.drop_all() #Elimina las tablas de la BD. Si ejecuto este archivo python borra las tablas y vuelve a crearlas apartir del modelo
-db.create_all() #Crea las tablas de la db a patir de los modelos

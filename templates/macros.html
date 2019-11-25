@@ -4,7 +4,7 @@
             <!--Pricipio card deck-->
             <div class="card-deck" id="eventos">
                 <div class="card borde">
-                    <img class="card-img-top img-fluid" style="width:400px;height:200px;" src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}"
+                    <img class="card-img-top img-fluid imagenes_card_deck" src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}"
                          alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ evento["nombre"] }}</h5>

@@ -26,7 +26,15 @@ body{
     padding:10px 60px 10px 60px;
     margin-left:25%;
 }
-
+.actualizar_evento_imagen{
+    width:150px;
+    margin-left:20px;
+    margin-bottom:-75px;
+}
+.imagenes_card_deck{
+    width:400px;
+    height:200px;
+}
 #registro{
     border:10px none;
     background-color: rgba(44,182,35,0.7);
