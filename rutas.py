@@ -21,7 +21,7 @@ load_dotenv()
 
 app.secret_key = os.getenv('SECRET_KEY') #clave secreta
 
-#Es una funcion por defecto, para las funcion login required.
+#Es una funcion a la que se entra por defecto, cuando un usuario no logueado trata de acceder a una ruta login_required.
 @login_manager.unauthorized_handler
 def unauthorized_callback():
     flash('Debe iniciar sesión para continuar y realizar esa accion.','warning')
@@ -74,7 +74,8 @@ def logout():
 def index(pag=1, desde_fecha='', hasta_fecha='', categoria=''):
     #Instancio formulario de filtrado
     formulario=formularios.FormularioFiltrarEvento()
-    tam_pag = 6
+    tam_pag = 6 #Indicamos el numero de elementos por pagina.
+
     #Si se realiza la búsqueda por formulario de filtro
     # Con request.args obtenemos los diferentes valores que pasamos en el formulario y se cargaron en la ruta,
     # si no se encuentra coincidencia con el primer parametro, devuelve None.
@@ -169,7 +170,7 @@ def actualizar_evento(id):
 
 
 
-@app.route('/admin/evento-detallado/<id>')
+@app.route('/admin/evento-detallado/<id>',methods=['POST','GET'])
 @login_required
 def evento_en_detalle_admin(id):
     comentario=formularios.FormularioComentario()
@@ -274,42 +275,32 @@ def registro_usuario():
 #----------------Comienzo de algunas funciones de Base de Datos-------
 
 @app.route('/evento/eliminar/<id>')
-def eliminarEventoAdmin(id):
-    # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
-    if current_user.is_admin() == False:
-        flash('¡No tienes permisos para acceder a esta ruta!')
-        return redirect(url_for('index'))
+def eliminarEvento(id):
+
     # EJ: evento/eliminar/1
     #Obtener evento por id
     evento = db.session.query(Evento).get(id)
-    #Eliminar de la db
-    db.session.delete(evento)
-    #Hacer commit de los cambios
-    try:
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        logger(str(e._message()),"Funcion EliminarEventoAdmin in rutas.py")
-        return mostrarTemplateError()
-    return redirect(url_for('indexadmin', evento=evento))
+    # Traemos el usuarioId perteneciente a ese evento.
+    usuarioId = evento.usuarioId
+    if current_user.admin or (not current_user.admin and current_user.is_authenticated and current_user.usuarioId == usuarioId):
 
+        #Eliminar de la db
+        db.session.delete(evento)
+        #Hacer commit de los cambios
+        try:
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            logger(str(e._message()),"Funcion EliminarEventoAdmin in rutas.py")
+            return mostrarTemplateError()
+        if current_user.admin: #Verifico donde voy a redirigir cuando elimine el evento.
+            return redirect(url_for('indexadmin', evento=evento))
+        if not current_user.admin and current_user.is_authenticated and current_user.usuarioId==usuarioId:  #En caso de que no sea admin el usuario,
+            return redirect(url_for('eventos_usuario', evento=evento))# verificamos que el evento sea suyo, en caso de que quiera borrar por URL
 
-@app.route('/usuario/evento/eliminar/<id>')
-def eliminarEventoUser(id):
-    # EJ: /usuario/evento/eliminar/1
-    #Obtener evento por id
-    evento = db.session.query(Evento).get(id)
-    #Eliminar de la db
-    db.session.delete(evento)
-    #Hacer commit de los cambios
-    try:
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        logger(str(e._message()),"Funcion eliminarEventoUser in rutas.py")
-        return mostrarTemplateError()
-    return redirect(url_for('eventos_usuario', evento=evento))
-
+    else:
+        flash('¡No puedes eliminar un evento que no es tuyo!')
+        return redirect(url_for('index'))
 
 #----------------------------------------------------------------------------
 
@@ -317,25 +308,32 @@ def eliminarEventoUser(id):
 @app.route('/comentario/eliminar/<id>')
 def eliminarComentario(id):
 
-
     # EJ: comentario/eliminar/1
     #Obtener comentario por id
     comentario = db.session.query(Comentario).get(id)
+    #Traemos el usuarioId perteneciente a ese comentario.
+    usuarioId=comentario.usuario.usuarioId
     #Obtenemos el eventoId asociado a ese comentario por medio de las relaciones de BD
     eventoid=comentario.eventoId
-    #Eliminar de la db
-    db.session.delete(comentario)
-    #Hacer commit de los cambios
-    try:
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        logger(str(e._message()),"Funcion eliminarComentario in rutas.py")
-        return mostrarTemplateError()
-    if current_user.admin:
-        return redirect(url_for('evento_en_detalle_admin',id=eventoid))
+    if current_user.admin or (not current_user.admin and current_user.is_authenticated and current_user.usuarioId == usuarioId):
+
+        #Eliminar de la db
+        db.session.delete(comentario)
+        #Hacer commit de los cambios
+        try:
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            logger(str(e._message()),"Funcion eliminarComentario in rutas.py")
+            return mostrarTemplateError()
+        if current_user.admin:
+            return redirect(url_for('evento_en_detalle_admin',id=eventoid))
+        if not current_user.admin and current_user.is_authenticated and current_user.usuarioId==usuarioId: #En caso de que no sea admin el usuario,
+            return redirect(url_for('eventogeneral', id=eventoid))                                          # verificamos que el comentario sea suyo, en caso de que quiera borrar por URL
+
     else:
-        return redirect(url_for('eventogeneral',id=eventoid))
+        flash('¡No puedes eliminar un comentario que no es tuyo!')
+        return redirect(url_for('index'))
 
 @app.route('/comentario/eliminar/todos/<id>')
 def eliminarTodosLosComentarios(id):

@@ -1,12 +1,12 @@
 from run import db,login_manager
-from werkzeug.security import generate_password_hash, check_password_hash #Permite generar y verificar pass con hash
+from werkzeug.security import generate_password_hash, check_password_hash #Permite generar y verificar pass con hash encriptadas
 from flask_login import UserMixin
 from flask import url_for
 
 #Creamos una clase que representara una tabla en la Base de Datos, en este caso "evento", donde tendremos de Clave Principal o primaria a el id del evento
 #declaramos los distintos campos de la tabla, cuales son sus tipos de datos, si pueden ser nulos  y algunos valores por default.
-class Evento(db.Model):
-    eventoId=db.Column(db.Integer, primary_key=True)
+class Evento(db.Model): # Obligatoriamente por el ORM de Flask-SQLAlchemy los objetos deben heredar Model para poder operar con las tablas
+    eventoId=db.Column(db.Integer, primary_key=True) #Column indica que la variable será justamente una columna de la tabla relacional, primary_key: Clave primaria de la tabla para poder relacionarla
     nombre=db.Column(db.String(60),nullable=False)
     fecha=db.Column(db.Date,nullable=False)
     hora = db.Column(db.Time, nullable=False)
@@ -18,14 +18,14 @@ class Evento(db.Model):
     #Relaciones entre evento y comentario (Uno a muchos) (En caso de eliminar un evento , con cascade eliminamos todos los comentarios que estaban asociados a ese evento):
     comentarios = db.relationship("Comentario", back_populates="evento",cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo evento de la clase Comentario
     #Relacion entre usuario y evento (Uno a Muchos):
-    usuarioId = db.Column(db.Integer, db.ForeignKey('usuario.usuarioId'), nullable=False)
+    usuarioId = db.Column(db.Integer, db.ForeignKey('usuario.usuarioId'), nullable=False) #ForeignKey es la clave para poder relacionar 1 objeto con muchos objetos en la relacion  de uno a muchos. Se pone del lado de los muchos siempre
     usuario = db.relationship('Usuario',back_populates="eventos") #back_populates establece que existe una relacion con el atributo eventos de la clase Usuario
 
     #Funcion que determina que se mostrará si se imprime el objeto
     def __repr__(self):
         return '<Evento: %r %r %r %r %r %r Usuario: %r>' % (self.nombre, self.fecha,self.hora, self.descripcion,self.imagen,self.tipo,self.usuarioId) #imprime el objeto
 
-    #Convertimos objeto de tipo Evento a JSON
+    #Convertimos objeto de tipo Evento a un diccionario con estilo JSON, para luego convertirlo a JSON Con jsonify
     def a_json(self):
         #Creamos un diccionario (clave-valor) para formar el estilo de un archivo JSON
         evento_json={
@@ -40,9 +40,9 @@ class Evento(db.Model):
         }
         return evento_json
 
-    #Metodo que usaremos sin necesidad de instanciar la clase.
     @staticmethod
-    # Convertir JSON a objeto
+    #Metodo que estático no hace falta instanciarlo, perteneciente a la clase Evento, que podemos pasarle un JSON y
+    # nos traera los atributos y los convertira adecuadamente a un Objeto evento
     def desde_json(evento_json):
         nombre = evento_json.get('nombre')
         fecha = evento_json.get('fecha')
@@ -83,7 +83,6 @@ class Usuario(UserMixin,db.Model):
     # Al verificar pass comparar hash del valor ingresado con el de la db
     def check_password(self, passwrd):
         return check_password_hash(self.password,passwrd)
-
     def get_id(self):
         return (self.usuarioId)
     def is_admin(self): #Comprobamos si el usuario logueado es admin.

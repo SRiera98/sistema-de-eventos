@@ -39,7 +39,7 @@
                        class="btn btn-dark">Ver
                         Evento</a>
 
-                    <a href="{{ url_for('eliminarEventoAdmin',id=evento["eventoId"]) }}" type="button"
+                    <a href="{{ url_for('eliminarEvento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-danger">Eliminar Evento</a>
                     <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-warning">Editar Evento<i class="fa fa-edit iconos"></i></a>
@@ -64,7 +64,7 @@
                        class="btn btn-dark">Ver Evento</a>
                     <a href="{{ url_for('aprobar_evento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-success">Aprobar Evento</a>
-                    <a href="{{ url_for('eliminarEventoAdmin',id=evento["eventoId"]) }}" type="button"
+                    <a href="{{ url_for('eliminarEvento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-danger">Eliminar Evento</a>
                     <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-warning">Editar Evento<i class="fa fa-edit iconos"></i></a>
@@ -91,7 +91,7 @@
                     {% endif %}
                     <a href="{{ url_for('actualizar_evento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-dark">Modificar Evento</a>
-                    <a href="{{ url_for('eliminarEventoUser',id=evento["eventoId"]) }}" type="button"
+                    <a href="{{ url_for('eliminarEvento',id=evento["eventoId"]) }}" type="button"
                        class="btn btn-danger">Eliminar Evento</a>
                 </div>
             </div>

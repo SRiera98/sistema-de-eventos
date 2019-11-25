@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h4 class="colorfooter">Filtrar por</h4>
-                <!--Enviar el formulario solamente por GET -->
+                <!--Enviar el formulario solamente por GET  para enviar los datos del formulario en la URL-->
                 <form method="GET" action="{{ url_for('index') }}" enctype="multipart/form-data" class="form-inline">
                     <div class="form-group">
                         {{ mostrar_campo(formulario.desde_fecha,class='form-control') }}
