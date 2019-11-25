@@ -24,7 +24,7 @@ app.secret_key = os.getenv('SECRET_KEY') #clave secreta
 #Es una funcion por defecto, para las funcion login required.
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    flash('Debe iniciar sesión para continuar.','warning')
+    flash('Debe iniciar sesión para continuar y realizar esa accion.','warning')
     #Redireccionar a la página que contiene el formulario de login
     return redirect(url_for('login'))
 
@@ -175,6 +175,7 @@ def evento_en_detalle_admin(id):
     comentario=formularios.FormularioComentario()
     #Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin()==False:
+        flash('¡No tienes permisos para acceder a esta ruta!')
         return redirect(url_for('index'))
     evento = db.session.query(Evento).get(id)
     return render_template('evento_detallado_admin.html',evento=evento,comentario=comentario)
@@ -220,6 +221,7 @@ def eventos_usuario():
 def indexadmin():
     # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin()==False:
+        flash('¡No tienes permisos para acceder a esta ruta!')
         return redirect(url_for('index'))
     lista_eventos_aprobados=db.session.query(Evento).filter(Evento.aprobado==True).all()
     lista_eventos_pendientes = db.session.query(Evento).filter(Evento.aprobado == False).all()
@@ -230,6 +232,7 @@ def indexadmin():
 def aprobar_evento(id):
     # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin()==False:
+        flash('¡No tienes permisos para acceder a esta ruta!')
         return redirect(url_for('index'))
     evento=db.session.query(Evento).get(id)
     evento.aprobado=True
@@ -263,7 +266,7 @@ def registro_usuario():
         #Establezco los parametros para enviar el email que confirma el registro
         # Destino, Asunto, Template
         configurarYEnviarMail(registro.email.data, '¡Gracias por Registrarte!', 'usuarioregistrado')
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     return render_template('formulario_registro.html',registrar=registro)
 
 
@@ -274,6 +277,7 @@ def registro_usuario():
 def eliminarEventoAdmin(id):
     # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin() == False:
+        flash('¡No tienes permisos para acceder a esta ruta!')
         return redirect(url_for('index'))
     # EJ: evento/eliminar/1
     #Obtener evento por id
@@ -337,6 +341,7 @@ def eliminarComentario(id):
 def eliminarTodosLosComentarios(id):
     # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin() == False:
+        flash('¡No tienes permisos para acceder a esta ruta!')
         return redirect(url_for('index'))
 
     #Instanciamos el evento deseado.

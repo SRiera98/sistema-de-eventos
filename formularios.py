@@ -79,3 +79,4 @@ class FormularioFiltrarEvento(FlaskForm):
     ]
     categoria=SelectField('Tipo de Evento',choices=opciones)
     envio_filtrar=SubmitField('Buscar')
+

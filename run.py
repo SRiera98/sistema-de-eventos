@@ -41,4 +41,4 @@ if __name__ == '__main__': #Nos aseguramos que solo se ejecute el servidor cuand
     from rutas import *
     from rutas_api import *
     from errores import  *
-    app.run(port = 8000,debug=True)
+    app.run(port = 8000,debug=False)

@@ -16,34 +16,37 @@
             </div>
             <div class="col-md-8">
                 <div id="imagenevento">
-                    <img src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}" class="card-img-top"
-                         id="eventototal" alt="...">
+                    <img src="{{ url_for('static', filename='imagenes/'+evento["imagen"]) }}" class="card-img-top" id="eventototal" alt="...">
                 </div>
             </div>
             <div class="col-md-4">
-                <p class="card-text letras_detalles_evento"><span class="oi oi-calendar" title="calendar"></span>{{ evento["fecha"] }}</p>
-                <p class="card-text letras_detalles_evento"><span class="oi oi-clock" title="clock"></span>{{ evento["hora"] }}</p>
-                <p class="card-text letras_detalles_evento"><span class="oi oi-map" title="map"></span>{{ evento["descripcion"] }}</p>
-                <p class="card-text letras_detalles_evento"><span class="oi oi-caret-right" title="caret-right"></span>{{ evento["tipo"] }}</p>
+                <p class="card-text letras_detalles_evento"><span class="oi oi-calendar"
+                                                                  title="calendar"></span>{{ evento["fecha"] }}</p>
+                <p class="card-text letras_detalles_evento"><span class="oi oi-clock"
+                                                                  title="clock"></span>{{ evento["hora"] }}</p>
+                <p class="card-text letras_detalles_evento"><span class="oi oi-map"
+                                                                  title="map"></span>{{ evento["descripcion"] }}</p>
+                <p class="card-text letras_detalles_evento"><span class="oi oi-caret-right"
+                                                                  title="caret-right"></span>{{ evento["tipo"] }}</p>
             </div>
 
         </div>
-        {% if current_user.is_authenticated %}
-            <div class="container">
-                <div class="row">
-                    <form method="POST" action="{{ url_for('agregar_comentario',id=evento["eventoId"]) }}"
-                          enctype="multipart/form-data">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                        <div style="padding-top: 20px;" class="col-md-6">
-                            {{ mostrar_campo_comentario(nuevocomentario.comentario,class='form-control',style="width: 1000px; height: 100px") }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ mostrar_campo_submit(nuevocomentario.submit,class='btn btn-primary botonesevento') }}
-                        </div>
-                    </form>
-                </div>
+
+        <div class="container">
+            <div class="row">
+                <form method="POST" action="{{ url_for('agregar_comentario',id=evento["eventoId"]) }}"
+                      enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div style="padding-top: 20px;" class="col-md-6">
+                        {{ mostrar_campo_comentario(nuevocomentario.comentario,class='form-control',style="width: 1000px; height: 100px") }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ mostrar_campo_submit(nuevocomentario.submit,class='btn btn-primary botonesevento') }}
+                    </div>
+                </form>
             </div>
-        {% endif %}
+        </div>
+
 
         <div class="container">
             <div class="row">

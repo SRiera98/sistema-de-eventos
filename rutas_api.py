@@ -6,8 +6,6 @@ from run import db,app,csrf
 from funciones_mail import configurarYEnviarMail
 
 
-#ANALIZAR COMO ACCEDER AL TRY EXCEPT DE LOS ERRORES DE BD, DADO QUE SE QUEDA EN EL ERROR 404 DEL GET_OR_404(ID)
-
 
 #Listar Eventos Pendientes
 #curl -H "Accept:application/json" http://localhost:8000/api/evento/listar/
