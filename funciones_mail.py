@@ -22,10 +22,10 @@ def enviarMail(app, msg):
         except smtplib.SMTPAuthenticationError as e:
             print("Error de autenticación, MAIL_USER o MAIL_PASSWORD incorrectos \n"+str(e))
             logger(str(e),"enviarMail in funciones_mail.py")
-        except smtplib.SMTPServerDisconnected as e:
+        except smtplib.SMTPServerDisconnected as e: #Esta excepcion se produce cuando el servidor se desconecta inesperadamente.
             print("Servidor desconectado: \n\n\n"+str(e))
             logger(str(e), "enviarMail in funciones_mail.py")
-        except smtplib.SMTPSenderRefused as e:
+        except smtplib.SMTPSenderRefused as e: #Cuando la direccion del emisor es rechazada por algun motivo que no sean problemas de credenciales.
             print("Se requiere autenticación: "+str(e))
             logger(str(e), "enviarMail in funciones_mail.py")
         except smtplib.SMTPException as e: #Error generico

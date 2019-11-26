@@ -18,7 +18,6 @@ def mostrar_datos_nuevoevento(nuevoevento):
     print(nuevoevento.imagen.data)
 def mostrar_datos_comentario(nuevocomentario):
     print(nuevocomentario.comentario.data)
-
 def mostrar_datos_filtrado(formulario):
     print("Fechadesde"+str(formulario.desde_fecha.data))
     print("Fechahasta"+str(formulario.hasta_fecha.data))

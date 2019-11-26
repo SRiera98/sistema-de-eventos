@@ -14,14 +14,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True   #Sigue las modificaciones 
 # de Recursos Uniforme o URI que representa un conjunto de recursos)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://'+os.getenv('DB_USERNAME')+':'+os.getenv('DB_PASS')+'@localhost/bdproyecto'  #Formato de coneccion a la BD.
 
-#Configuraciones de mail
+#Seteamos la clave secreta.
 app.config['SECRET_KEY'] =os.getenv('SECRET_KEY') #Trae la clave secreta del entorno, para que ninguna api de terceros se haga pasar por nosotros. Esta clave secreta se comprueba en varios lugares por el motivo antes mencionado
 
 #Realizamos configuraciones de MAIL
 app.config['MAIL_HOSTNAME'] = 'localhost' #Ip del host de salida
 app.config['MAIL_SERVER'] = 'smtp.gmail.com' #Dirección del servidor mail utilizado
-app.config['MAIL_PORT'] = 587  #Puerto del servidor mail saliente SMTP
-app.config['MAIL_USE_TLS'] = True #Especificar conexión con SSL/TLS, diferentes tipos de protocolos para las seguridad con el servidor
+app.config['MAIL_PORT'] = 587  #Puerto del servidor mail saliente SMTP (Se utiliza por lo general 587 y el 25)
+app.config['MAIL_USE_TLS'] = True #Nos permiten utilizar un Protocolo de cifrado TLS, evitando asi que ningun otra entidad que no sea el destino pueda leer el mail.
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME') #Configura el mail con el que enviaremos los mails a nuestros usuarios, dicho mail esta almacenado como variable de entorno por temas de seguridad.
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD') #Configuramos la password del mail nuestro con el que estamos enviando correos, almacenada como variable de entorno
 app.config['FLASKY_MAIL_SENDER'] = 'EventFlare Eventos <evenflare@eventos.com>' #Configuramos un alias con el cual el usuario recibira el mail, pero no representa el mail real.
@@ -34,7 +34,9 @@ db = SQLAlchemy(app)
 #establecemos un instancia de objeto de tipo LoginManager, para manejar sesiones en nuestra pagina web.
 login_manager = LoginManager(app)
 
-csrf = CSRFProtect(app) #Iniciamos la protección CSRF. Es util usar un token CSRF, permite que nuestra aplicación haga las peticiones desde nuestro sitio, lo que hacemos es instanciar el CSRF
+csrf = CSRFProtect(app) #Iniciamos la protección CSRF. Es util usar un token CSRF, permite que nuestra aplicación haga
+                        # las peticiones unicamente desde el dominio de nuestro sitio, evitando asi que una pagina web
+                        #externa trate de realizar peticiones con fines maliciosos a nuestra Web.
 # -*- coding: utf-8 *-*
 
 
@@ -42,4 +44,4 @@ if __name__ == '__main__': #Nos aseguramos que solo se ejecute el servidor cuand
     from rutas import *
     from rutas_api import *
     from errores import  *
-    app.run(port = 8000,debug=True)
+    app.run(port = 8000,debug=False)

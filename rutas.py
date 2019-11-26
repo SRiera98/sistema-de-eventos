@@ -1,30 +1,23 @@
 from sqlalchemy.exc import SQLAlchemyError #Se encarga de indicarnos el error de SQL
 from modelos import * #Importamos las clases que representan cada una de las tablas de nuestra Base de Datos
-from flask import request
-import formularios #Importamos las clases de los formularios, que luego seran instanciadas a su debido tiempo.
-from dotenv import load_dotenv #carga las variables de entorno
-import os #modulo de python para manejar distintas funcionalidades del SO
 from flask import redirect, url_for,render_template #importar para permitir redireccionar y generar url ademas otro modulo para importar templates
 from flask import flash #importar para mostrar mensajes flash
 import os.path #Nos permitira guardar las imagenes que carguemos en nuestro sistema
 from werkzeug.utils import secure_filename # Modifica el nombre del archivo a uno seguro
 from datetime import datetime #manejo de fechas.
 from run import db, app, login_manager
-import datetime #importar funciones de fecha
+from random import randint #importa funcion random que sera utilizada para guardar imagen
 from funciones_mail import *
-from funciones_basedatos import *
-from flask_login import login_required, login_user, logout_user, current_user, LoginManager #Diferentes modulos de Flask para manejar Sesiones
+from funciones_basedatos import * #Funciones para el envio de mail al usuario.
+import formularios #Importamos las clases de los formularios, que luego seran instanciadas a su debido tiempo.
+from flask_login import login_required, login_user, logout_user, current_user #Diferentes modulos de Flask para manejar Sesiones
 from errores import *
-from funciones import *
-load_dotenv()
-
-
-app.secret_key = os.getenv('SECRET_KEY') #clave secreta
+from funciones import * #Funciones para los print de formularios que nos sirven para control.
 
 #Es una funcion a la que se entra por defecto, cuando un usuario no logueado trata de acceder a una ruta login_required.
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    flash('Debe iniciar sesión para continuar y realizar esa accion.','warning')
+    flash('Debe iniciar sesión para continuar y realizar esa acción.','warning')
     #Redireccionar a la página que contiene el formulario de login
     return redirect(url_for('login'))
 
@@ -60,7 +53,7 @@ def login():
 #Logout - Deslogueo de usuario.
 @app.route('/logout')
 #Limitar el acceso a los usuarios registrados
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def logout():
     logout_user()
     return redirect(url_for('login'))
@@ -77,9 +70,10 @@ def index(pag=1, desde_fecha='', hasta_fecha='', categoria=''):
     tam_pag = 6 #Indicamos el numero de elementos por pagina.
 
     #Si se realiza la búsqueda por formulario de filtro
-    # Con request.args obtenemos los diferentes valores que pasamos en el formulario y se cargaron en la ruta,
-    # si no se encuentra coincidencia con el primer parametro, devuelve None.
-    if(request.args):
+    # Con request.args creamos un diccionario con los argumentos del formulario, luego vamos buscando coincidencias con
+    # la clave del diccionario, en cada coincidencia se verifica que no este vacio el valor de la clave del diccionario
+    #Si lo esta asignamos None(NULL) a la variable.
+    if(request.args): #request.args crea un diccionario con los argumentos enviados en el formulario.
         desde_fecha = request.args.get('desde_fecha',None)
         hasta_fecha = request.args.get('hasta_fecha',None)
         categoria = request.args.get('categoria',None)
@@ -102,14 +96,14 @@ def index(pag=1, desde_fecha='', hasta_fecha='', categoria=''):
 
 
 @app.route('/usuario/crear-evento',methods=['POST','GET'])
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def establecer_evento():
     #Instancio formulario para crear un evento
     nuevoevento=formularios.FormularioCrearEvento()
     #Verifico si el formulario ha sido enviado
     if nuevoevento.validate_on_submit():
         file = nuevoevento.imagen.data  # Obtener imagen
-        filename = secure_filename(file.filename)  # Modifica el nombre del archivo a uno seguro
+        filename = secure_filename(nuevoevento.titulo.data + " imagen " +str(randint(1,2000)))  # Modifica el nombre del archivo a uno seguro
         file.save(os.path.join('static/imagenes/', filename))  # Guardar imagen en sistema
         flash('¡Evento creado correctamente!')
         mostrar_datos_nuevoevento(nuevoevento)
@@ -125,7 +119,7 @@ def establecer_evento():
 
 
 @app.route('/usuario/evento/actualizar/<id>',methods=['POST','GET'])
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def actualizar_evento(id):
 
     #Traemos el evento a modificar con determinado id
@@ -139,7 +133,7 @@ def actualizar_evento(id):
     if nuevoevento.validate_on_submit():
         flash('¡Evento actualizado correctamente!')
         mostrar_datos_nuevoevento(nuevoevento)
-        evento.nombre=nuevoevento.titulo.data
+        evento.nombre=nuevoevento.titulo.data           # A los valores de la query del objeto que queremos le asignamos los nuevos conseguidos por el propio formulario
         evento.fecha=nuevoevento.fecha.data
         evento.hora=nuevoevento.hora.data
         evento.descripcion=nuevoevento.descripcion.data
@@ -171,7 +165,7 @@ def actualizar_evento(id):
 
 
 @app.route('/admin/evento-detallado/<id>',methods=['POST','GET'])
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def evento_en_detalle_admin(id):
     comentario=formularios.FormularioComentario()
     #Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
@@ -193,7 +187,7 @@ def eventogeneral(id):
 
 
 @app.route('/index/evento/agregar-comentario/<id>',methods=["POST"])
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def agregar_comentario(id):
     nuevocomentario = formularios.FormularioComentario()
     if nuevocomentario.validate_on_submit():
@@ -211,14 +205,14 @@ def agregar_comentario(id):
     return render_template('evento_general.html',nuevocomentario=nuevocomentario)
 
 @app.route('/usuario/eventos/mostrar')
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def eventos_usuario():
     #Hago un query (consulta a la BD) para obtener todos los eventos propios del usuario actual.
     listaeventos=db.session.query(Evento).filter(Evento.usuarioId==current_user.usuarioId).all()
     return render_template('panel_usuario.html',listar_eventos=listaeventos)
 
 @app.route('/admin')
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def indexadmin():
     # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin()==False:
@@ -229,7 +223,7 @@ def indexadmin():
     return render_template('index_admin.html',lista_eventos_aprobados=lista_eventos_aprobados,lista_eventos_pendientes=lista_eventos_pendientes,evento="pendiente")
 
 @app.route('/admin/evento/aprobar/<id>')
-@login_required
+@login_required #Metodo de Flask Login del LoginManager que permite darle a los usuarios acceso restringido a ciertas vistas.
 def aprobar_evento(id):
     # Verifico si el usuario que accedio a esta ruta es Admin, si no lo es, lo redirijo a la pagina principal.
     if current_user.is_admin()==False:

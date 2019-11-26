@@ -61,9 +61,11 @@ class Usuario(UserMixin,db.Model):
     admin=db.Column(db.Boolean,nullable=False)
 
     #Relacion entre evento y usuario (Relacion Uno-Muchos):
+    # delete-orphan provoca que se eliminen los hijos cuyos padres han sido eliminados
     eventos = db.relationship("Evento", back_populates="usuario", cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo usuario de la clase Evento
 
     # Relacion entre usuario y comentario (Relacion Uno-Muchos):
+    # delete-orphan provoca que se eliminen los hijos cuyos padres han sido eliminados
     comentarios = db.relationship("Comentario", back_populates="usuario", cascade="all, delete-orphan") #back_populates establece que existe una relacion con el atributo usuario de la clase Comentario
 
 
